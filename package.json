@@ -1,0 +1,17 @@
+{
+  "name": "p2p-ssv-cluster-manager",
+  "author": "P2P Validator <info@p2p.org>",
+  "homepage": "https://p2p.org/",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "dependencies": {
+    "viem": "2.7.6"
+  },
+  "devDependencies": {
+    "@types/node": "20.11.17",
+    "ts-node": "10.9.2",
+    "typescript": "5.1.6"
+  }
+}
