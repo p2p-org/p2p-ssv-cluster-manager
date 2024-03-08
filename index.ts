@@ -1,14 +1,13 @@
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
+import {P2pSsvProxyFactoryContract} from "./scripts/helpers/P2pSsvProxyFactoryContract";
+
+// 1. Check validator status == exited
+// 2. Remove validator from SSV
+// 3. If cluster empty, withdraw
 
 async function main() {
-    const client = createPublicClient({
-        chain: mainnet,
-        transport: http(),
-    })
-
-    const blockNumber = await client.getBlockNumber()
-    console.log(blockNumber)
+    const logs = await P2pSsvProxyFactoryContract.getEvents.Transfer()
 }
 
 main().catch((error) => {

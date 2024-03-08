@@ -3,15 +3,17 @@
   "author": "P2P Validator <info@p2p.org>",
   "homepage": "https://p2p.org/",
   "license": "MIT",
-  "scripts": {
-    "start": "ts-node index.ts"
-  },
-  "dependencies": {
-    "viem": "2.7.6"
-  },
   "devDependencies": {
+    "axios": "1.6.7",
+    "log4js": "6.9.1",
+    "viem": "2.7.6",
     "@types/node": "20.11.17",
+    "dotenv": "16.4.5",
     "ts-node": "10.9.2",
     "typescript": "5.1.6"
+  },
+  "scripts": {
+    "97-test": "ts-node 97-test.ts",
+    "start": "ts-node index.ts"
   }
 }
