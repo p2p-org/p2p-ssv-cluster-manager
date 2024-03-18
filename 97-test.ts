@@ -3,25 +3,32 @@ import {logger} from "./scripts/helpers/logger";
 import {getIsValidatorExited} from "./scripts/getIsValidatorExited";
 import {getProxiesWithPubkeys} from "./scripts/getProxiesWithPubkeys";
 import { getIsValidatorRemoved } from "./scripts/getIsValidatorRemoved"
+import { exitValidator } from "./scripts/exitValidator"
 
 async function main() {
     logger.info('97-test started')
 
-    const proxiesWithPubkeys = await getProxiesWithPubkeys()
-    const proxies = Object.keys(proxiesWithPubkeys)
+    await test_exitValidator()
 
-    for (const proxy of proxies) {
-        for (const pubkey of proxiesWithPubkeys[proxy]) {
-            const isExited = await getIsValidatorExited(pubkey)
-            const isRemoved = await getIsValidatorRemoved(proxy, pubkey)
-
-            if (isExited && !isRemoved) {
-
-            }
-        }
-    }
+    // const proxiesWithPubkeys = await getProxiesWithPubkeys()
+    // const proxies = Object.keys(proxiesWithPubkeys)
+    //
+    // for (const proxy of proxies) {
+    //     for (const pubkey of proxiesWithPubkeys[proxy]) {
+    //         const isExited = await getIsValidatorExited(pubkey)
+    //         const isRemoved = await getIsValidatorRemoved(proxy, pubkey)
+    //
+    //         if (isExited && !isRemoved) {
+    //
+    //         }
+    //     }
+    // }
 
     logger.info('97-test finished')
+}
+
+async function test_exitValidator() {
+    await exitValidator()
 }
 
 async function test_getIsValidatorExited() {
