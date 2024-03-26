@@ -4,11 +4,15 @@ import {getIsValidatorExited} from "./scripts/getIsValidatorExited";
 import {getProxiesWithPubkeys} from "./scripts/getProxiesWithPubkeys";
 import { getIsValidatorRemoved } from "./scripts/getIsValidatorRemoved"
 import { exitValidator } from "./scripts/exitValidator"
+import { predictFeeDistributorAddress } from "./scripts/predictFeeDistributorAddress"
+import * as console from "console"
+import { setFeeRecipientAddress } from "./scripts/setFeeRecipientAddress"
 
 async function main() {
     logger.info('97-test started')
 
-    await test_exitValidator()
+    const txHash = await setFeeRecipientAddress()
+    console.log(txHash)
 
     // const proxiesWithPubkeys = await getProxiesWithPubkeys()
     // const proxies = Object.keys(proxiesWithPubkeys)
