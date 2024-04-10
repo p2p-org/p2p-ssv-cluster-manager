@@ -1,10 +1,11 @@
 import { logger } from "./helpers/logger"
 import { account, publicClient, walletClient } from "./helpers/clients"
-import { SSVNetworkAbi, SSVNetworkAddresss } from "./helpers/SSVNetworkContract"
-import { BaseError, ContractFunctionRevertedError } from "viem"
+import { SSVNetworkAbi } from "./helpers/SSVNetworkContract"
+import { Address, BaseError, ContractFunctionRevertedError } from "viem"
 import { Cluster } from "./models/Cluster"
 
 export async function bulkRemoveValidator(
+  proxy: string,
   publicKeys: string[],
   operatorIds: number[],
   cluster: Cluster
@@ -15,7 +16,7 @@ export async function bulkRemoveValidator(
 
   try {
     const { request } = await publicClient.simulateContract({
-      address: SSVNetworkAddresss,
+      address: proxy as Address,
       abi: SSVNetworkAbi,
       functionName: 'bulkRemoveValidator',
       args: [publicKeys, operatorIds, cluster],

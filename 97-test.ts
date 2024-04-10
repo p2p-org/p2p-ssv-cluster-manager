@@ -5,11 +5,23 @@ import { getIsValidatorRemoved } from "./scripts/getIsValidatorRemoved"
 import { exitValidator } from "./scripts/exitValidator"
 import * as console from "console"
 import { setFeeRecipientAddress } from "./scripts/setFeeRecipientAddress"
+import { bulkRemoveValidator } from "./scripts/bulkRemoveValidator"
 
 async function main() {
     logger.info('97-test started')
 
-
+    const test = await bulkRemoveValidator(
+      '0x5071e29F49F9B008267D2Ed76D54B32D91695cDe',
+      ['0xaf1af4ff38f09d3f0e6bb15637cd69a435b4d56437b07c058ed0e47511cecc6354730739dbd2389ffb112d62927e1a60'],
+      [192, 195, 200, 201],
+      {
+          validatorCount: 1,
+          networkFeeIndex: 60962058681n,
+          index: 32843885268n,
+          active: true,
+          balance: 6206494915980000000n
+      }
+    )
 
     logger.info('97-test finished')
 }
