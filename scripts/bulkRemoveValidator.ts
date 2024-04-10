@@ -2,15 +2,16 @@ import { logger } from "./helpers/logger"
 import { account, publicClient, walletClient } from "./helpers/clients"
 import { SSVNetworkAbi, SSVNetworkAddresss } from "./helpers/SSVNetworkContract"
 import { BaseError, ContractFunctionRevertedError } from "viem"
+import { Cluster } from "./models/Cluster"
 
-export async function removeValidator() {
-  logger.log('removeValidator started')
+export async function bulkRemoveValidator(
+  publicKeys: string[],
+  operatorIds: number[],
+  cluster: Cluster
+) {
+  logger.log('bulkRemoveValidator started')
 
   let txHash = ''
-
-  const publicKeys = []
-  const operatorIds = []
-  const cluster = {}
 
   try {
     const { request } = await publicClient.simulateContract({
@@ -35,7 +36,7 @@ export async function removeValidator() {
     }
   }
 
-  logger.log('removeValidator finished')
+  logger.log('bulkRemoveValidator finished')
 
   return txHash
 }

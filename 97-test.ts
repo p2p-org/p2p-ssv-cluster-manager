@@ -1,38 +1,25 @@
 import "dotenv/config"
 import {logger} from "./scripts/helpers/logger";
 import {getIsValidatorExited} from "./scripts/getIsValidatorExited";
-import {getProxiesWithPubkeys} from "./scripts/getProxiesWithPubkeys";
 import { getIsValidatorRemoved } from "./scripts/getIsValidatorRemoved"
 import { exitValidator } from "./scripts/exitValidator"
-import { predictFeeDistributorAddress } from "./scripts/predictFeeDistributorAddress"
 import * as console from "console"
 import { setFeeRecipientAddress } from "./scripts/setFeeRecipientAddress"
 
 async function main() {
     logger.info('97-test started')
 
-    const txHash = await setFeeRecipientAddress()
-    console.log(txHash)
 
-    // const proxiesWithPubkeys = await getProxiesWithPubkeys()
-    // const proxies = Object.keys(proxiesWithPubkeys)
-    //
-    // for (const proxy of proxies) {
-    //     for (const pubkey of proxiesWithPubkeys[proxy]) {
-    //         const isExited = await getIsValidatorExited(pubkey)
-    //         const isRemoved = await getIsValidatorRemoved(proxy, pubkey)
-    //
-    //         if (isExited && !isRemoved) {
-    //
-    //         }
-    //     }
-    // }
 
     logger.info('97-test finished')
 }
 
 async function test_exitValidator() {
     await exitValidator()
+}
+
+async function test_setFeeRecipientAddress() {
+    const txHash = await setFeeRecipientAddress()
 }
 
 async function test_getIsValidatorExited() {
