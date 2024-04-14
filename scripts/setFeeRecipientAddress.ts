@@ -14,7 +14,7 @@ export async function setFeeRecipientAddress() {
 
   try {
     const { request } = await publicClient.simulateContract({
-      address: '0x944991724cFA9E218f73bA03608913dA9a21F9b7',
+      address: '0x6161A36B7bD4d469A11803535816aAC9829ad5cc',
       abi: SSVNetworkAbi,
       functionName: 'setFeeRecipientAddress',
       args: [predictedFeeDistributorAddress],
