@@ -8,14 +8,17 @@ import { setFeeRecipientAddress } from "./scripts/setFeeRecipientAddress"
 import { bulkRemoveValidator } from "./scripts/bulkRemoveValidator"
 import { liquidate } from "./scripts/liquidate"
 import { predictFeeDistributorAddress } from "./scripts/predictFeeDistributorAddress"
+import { getProxiesWithOperatorIds } from "./scripts/getProxiesWithOperatorIds"
 
 async function main() {
     logger.info('97-test started')
 
-    const aa = await predictFeeDistributorAddress()
-    console.log(aa)
+    const aa = await getProxiesWithOperatorIds()
 
-    await setFeeRecipientAddress()
+    // const aa = await predictFeeDistributorAddress()
+    // console.log(aa)
+    //
+    // await setFeeRecipientAddress()
 
     logger.info('97-test finished')
 }

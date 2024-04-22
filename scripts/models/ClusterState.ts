@@ -1,4 +1,4 @@
-export interface Cluster {
+export interface ClusterState {
   validatorCount: number;
   networkFeeIndex: bigint;
   index: bigint;

@@ -2,13 +2,13 @@ import { logger } from "./helpers/logger"
 import { account, publicClient, walletClient } from "./helpers/clients"
 import { SSVNetworkAbi } from "./helpers/SSVNetworkContract"
 import { Address, BaseError, ContractFunctionRevertedError } from "viem"
-import { Cluster } from "./models/Cluster"
+import { ClusterState } from "./models/ClusterState"
 
 export async function bulkRemoveValidator(
   proxy: string,
   publicKeys: string[],
   operatorIds: number[],
-  cluster: Cluster
+  cluster: ClusterState
 ) {
   logger.log('bulkRemoveValidator started')
 
