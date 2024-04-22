@@ -9,11 +9,12 @@ import { bulkRemoveValidator } from "./scripts/bulkRemoveValidator"
 import { liquidate } from "./scripts/liquidate"
 import { predictFeeDistributorAddress } from "./scripts/predictFeeDistributorAddress"
 import { getProxiesWithOperatorIds } from "./scripts/getProxiesWithOperatorIds"
+import { getAllClusterIds } from "./scripts/getAllClusterIds"
 
 async function main() {
     logger.info('97-test started')
 
-    const aa = await getProxiesWithOperatorIds()
+    const aa = await getAllClusterIds()
 
     // const aa = await predictFeeDistributorAddress()
     // console.log(aa)
