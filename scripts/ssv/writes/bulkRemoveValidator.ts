@@ -1,8 +1,8 @@
-import { logger } from "./helpers/logger"
-import { account, publicClient, walletClient } from "./helpers/clients"
-import { SSVNetworkAbi } from "./helpers/SSVNetworkContract"
+import { logger } from "../../common/helpers/logger"
+import { account, publicClient, walletClient } from "../../common/helpers/clients"
+import { SSVNetworkAbi } from "../contracts/SSVNetworkContract"
 import { Address, BaseError, ContractFunctionRevertedError } from "viem"
-import { ClusterState } from "./models/ClusterState"
+import { ClusterState } from "../../models/ClusterState"
 
 export async function bulkRemoveValidator(
   proxy: string,

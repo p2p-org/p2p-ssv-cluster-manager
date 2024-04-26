@@ -1,4 +1,4 @@
-import { FeeDistributorFactoryContract } from "./helpers/FeeDistributorFactoryContract"
+import { FeeDistributorFactoryContract } from "../contracts/FeeDistributorFactoryContract"
 
 export async function predictFeeDistributorAddress() {
   const referenceFeeDistributor = '0x78ce038aC24238c59777F5E4023707A23BB72D22'

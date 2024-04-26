@@ -1,8 +1,8 @@
-import { logger } from "./helpers/logger"
-import { account, publicClient, walletClient } from "./helpers/clients"
+import { logger } from "../../common/helpers/logger"
+import { account, publicClient, walletClient } from "../../common/helpers/clients"
 import { BaseError, ContractFunctionRevertedError } from "viem"
 import * as console from "console"
-import { P2pSsvProxyContractAbi } from "./helpers/P2pSsvProxyContractAbi"
+import { P2pSsvProxyContractAbi } from "../contracts/P2pSsvProxyContractAbi"
 
 export async function liquidate() {
   logger.log('liquidate started')

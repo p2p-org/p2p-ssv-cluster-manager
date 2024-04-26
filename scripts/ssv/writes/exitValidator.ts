@@ -1,23 +1,23 @@
-import { logger } from "./helpers/logger"
-import { account, publicClient, walletClient } from "./helpers/clients"
-import { SSVNetworkAbi, SSVNetworkAddresss } from "./helpers/SSVNetworkContract"
+import { logger } from "../../common/helpers/logger"
+import { account, publicClient, walletClient } from "../../common/helpers/clients"
+import { SSVNetworkAbi, SSVNetworkAddresss } from "../contracts/SSVNetworkContract"
 import { BaseError, ContractFunctionRevertedError } from "viem"
 import * as console from "console"
-import { predictFeeDistributorAddress } from "./predictFeeDistributorAddress"
 
-export async function setFeeRecipientAddress() {
-  logger.log('setFeeRecipientAddress started')
+export async function exitValidator() {
+  logger.log('exitValidator started')
 
   let txHash = ''
 
-  const predictedFeeDistributorAddress = await predictFeeDistributorAddress()
+  const publicKey = '0xaf1af4ff38f09d3f0e6bb15637cd69a435b4d56437b07c058ed0e47511cecc6354730739dbd2389ffb112d62927e1a60'
+  const operatorIds = [192, 195, 200, 201]
 
   try {
     const { request } = await publicClient.simulateContract({
-      address: '0x29984aadadb3927fb8c0cf5a539a282f39066332',
+      address: '0x5071e29F49F9B008267D2Ed76D54B32D91695cDe',
       abi: SSVNetworkAbi,
-      functionName: 'setFeeRecipientAddress',
-      args: [predictedFeeDistributorAddress],
+      functionName: 'exitValidator',
+      args: [publicKey, operatorIds],
       account
     })
 
@@ -37,7 +37,7 @@ export async function setFeeRecipientAddress() {
     }
   }
 
-  logger.log('setFeeRecipientAddress finished')
+  logger.log('exitValidator finished')
 
   return txHash
 }

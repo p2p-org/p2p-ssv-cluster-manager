@@ -1,7 +1,7 @@
-import {logger} from "./helpers/logger";
-import {publicClient} from "./helpers/clients";
+import {logger} from "../../common/helpers/logger";
+import {publicClient} from "../../common/helpers/clients";
 import {decodeEventLog} from "viem";
-import {SSVNetworkAbi, SSVNetworkAddresss} from "./helpers/SSVNetworkContract";
+import {SSVNetworkAbi, SSVNetworkAddresss} from "../contracts/SSVNetworkContract";
 
 export async function getPubkeysForProxy(proxy: string) {
     logger.info('getPubkeysForProxy started for ' + proxy)

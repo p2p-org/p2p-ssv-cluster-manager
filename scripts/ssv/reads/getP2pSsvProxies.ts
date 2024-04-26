@@ -1,9 +1,9 @@
-import {logger} from "./helpers/logger";
+import {logger} from "../../common/helpers/logger";
 import {
     P2pSsvProxyFactoryAbi,
     P2pSsvProxyFactoryAddresss
-} from "./helpers/P2pSsvProxyFactoryContract";
-import {publicClient} from "./helpers/clients";
+} from "../contracts/P2pSsvProxyFactoryContract";
+import {publicClient} from "../../common/helpers/clients";
 import {decodeEventLog} from "viem";
 
 export async function getP2pSsvProxies() {

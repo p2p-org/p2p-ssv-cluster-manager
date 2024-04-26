@@ -1,7 +1,7 @@
-import { getProxiesWithPubkeys } from "./getProxiesWithPubkeys"
-import { getIsValidatorExited } from "./getIsValidatorExited"
-import { getIsValidatorRemoved } from "./getIsValidatorRemoved"
-import { logger } from "./helpers/logger"
+import { getProxiesWithPubkeys } from "../reads/getProxiesWithPubkeys"
+import { getIsValidatorExited } from "../reads/getIsValidatorExited"
+import { getIsValidatorRemoved } from "../reads/getIsValidatorRemoved"
+import { logger } from "../../common/helpers/logger"
 import { bulkRemoveValidator } from "./bulkRemoveValidator"
 
 export async function removeExitedValidatorsFromClusters() {

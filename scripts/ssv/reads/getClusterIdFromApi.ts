@@ -1,5 +1,5 @@
 import axios from "axios";
-import {logger} from "./helpers/logger";
+import {logger} from "../../common/helpers/logger";
 
 export async function getClusterIdFromApi(owner: string, operators: bigint[]): Promise<string> {
     const args = `owner/${owner}/operators/${operators.join(',')}`

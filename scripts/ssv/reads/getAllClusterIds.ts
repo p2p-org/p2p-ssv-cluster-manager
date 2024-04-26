@@ -1,4 +1,4 @@
-import {logger} from "./helpers/logger";
+import {logger} from "../../common/helpers/logger";
 import {getP2pSsvProxies} from "./getP2pSsvProxies";
 import {getPubkeysForProxy} from "./getPubkeysForProxy";
 import { getOperatorIdsForProxy } from "./getOperatorIdsForProxy"

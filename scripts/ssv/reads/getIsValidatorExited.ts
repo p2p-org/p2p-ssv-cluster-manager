@@ -1,5 +1,5 @@
 import axios from "axios";
-import {logger} from "./helpers/logger";
+import {logger} from "../../common/helpers/logger";
 
 export async function getIsValidatorExited(pubkey: string) {
     logger.info('getIsValidatorExited started for ' + pubkey)

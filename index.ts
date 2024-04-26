@@ -1,6 +1,6 @@
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
-import {P2pSsvProxyFactoryContract} from "./scripts/helpers/P2pSsvProxyFactoryContract";
+import {P2pSsvProxyFactoryContract} from "./scripts/ssv/contracts/P2pSsvProxyFactoryContract";
 
 // 1. Check validator status == exited
 // 2. Remove validator from SSV

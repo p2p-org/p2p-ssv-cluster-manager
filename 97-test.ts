@@ -1,25 +1,16 @@
 import "dotenv/config"
-import {logger} from "./scripts/helpers/logger";
-import {getIsValidatorExited} from "./scripts/getIsValidatorExited";
-import { getIsValidatorRemoved } from "./scripts/getIsValidatorRemoved"
-import { exitValidator } from "./scripts/exitValidator"
+import {logger} from "./scripts/common/helpers/logger";
+import {getIsValidatorExited} from "./scripts/ssv/reads/getIsValidatorExited";
+import { getIsValidatorRemoved } from "./scripts/ssv/reads/getIsValidatorRemoved"
+import { exitValidator } from "./scripts/ssv/writes/exitValidator"
 import * as console from "console"
-import { setFeeRecipientAddress } from "./scripts/setFeeRecipientAddress"
-import { bulkRemoveValidator } from "./scripts/bulkRemoveValidator"
-import { liquidate } from "./scripts/liquidate"
-import { predictFeeDistributorAddress } from "./scripts/predictFeeDistributorAddress"
-import { getProxiesWithOperatorIds } from "./scripts/getProxiesWithOperatorIds"
-import { getAllClusterIds } from "./scripts/getAllClusterIds"
+import { setFeeRecipientAddress } from "./scripts/ssv/writes/setFeeRecipientAddress"
+
 
 async function main() {
     logger.info('97-test started')
 
-    const aa = await getAllClusterIds()
 
-    // const aa = await predictFeeDistributorAddress()
-    // console.log(aa)
-    //
-    // await setFeeRecipientAddress()
 
     logger.info('97-test finished')
 }

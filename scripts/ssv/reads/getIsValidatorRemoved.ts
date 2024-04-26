@@ -1,6 +1,6 @@
-import {logger} from "./helpers/logger";
-import {SSVNetworkViewsAbi, SSVNetworkViewsAddresss} from "./helpers/SSVNetworkViewsContract";
-import {publicClient} from "./helpers/clients";
+import {logger} from "../../common/helpers/logger";
+import {SSVNetworkViewsAbi, SSVNetworkViewsAddresss} from "../contracts/SSVNetworkViewsContract";
+import {publicClient} from "../../common/helpers/clients";
 
 export async function getIsValidatorRemoved(clusterOwner: string, pubkey: string) {
     logger.info('getIsValidatorRemoved started for ' + pubkey)
