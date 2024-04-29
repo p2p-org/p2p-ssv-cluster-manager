@@ -5,12 +5,14 @@ import {publicClient} from "../../common/helpers/clients";
 export async function getIsValidatorRemoved(clusterOwner: string, pubkey: string) {
     logger.info('getIsValidatorRemoved started for ' + pubkey)
 
-    const isRemoved = await publicClient.readContract({
+    const isActive = await publicClient.readContract({
         address: SSVNetworkViewsAddresss,
         abi: SSVNetworkViewsAbi,
         functionName: 'getValidator',
         args: [clusterOwner, pubkey]
     })
+
+    const isRemoved = !isActive
 
     logger.info('getIsValidatorRemoved finished for ' + pubkey + ' ' + isRemoved)
     return isRemoved
