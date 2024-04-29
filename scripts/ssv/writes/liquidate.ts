@@ -1,48 +1,26 @@
 import { logger } from "../../common/helpers/logger"
-import { account, publicClient, walletClient } from "../../common/helpers/clients"
-import { BaseError, ContractFunctionRevertedError } from "viem"
-import * as console from "console"
 import { P2pSsvProxyContractAbi } from "../contracts/P2pSsvProxyContractAbi"
+import { sendTx } from "../../common/helpers/sendTx"
 
 export async function liquidate() {
   logger.log('liquidate started')
 
-  let txHash = ''
-
   const operatorIds = [192, 195, 200, 201]
 
-  try {
-    const { request } = await publicClient.simulateContract({
-      address: '0x5071e29F49F9B008267D2Ed76D54B32D91695cDe',
-      abi: P2pSsvProxyContractAbi,
-      functionName: 'liquidate',
-      args: [operatorIds, [
-        {
-          validatorCount: 0,
-          networkFeeIndex: 64749941340n,
-          index: 77106991716n,
-          active: true,
-          balance: 5725985024910000000n
-        }
-      ]],
-      account
-    })
-
-    txHash = await walletClient.writeContract(request)
-
-    console.log(txHash)
-  } catch (err) {
-    logger.error(err)
-
-    if (err instanceof BaseError) {
-      const revertError = err.walk(err => err instanceof ContractFunctionRevertedError)
-      if (revertError instanceof ContractFunctionRevertedError) {
-        const errorName = revertError.data?.errorName ?? ''
-
-        logger.error(errorName)
+  const txHash = await sendTx(
+    '0x5071e29F49F9B008267D2Ed76D54B32D91695cDe',
+    P2pSsvProxyContractAbi,
+    'liquidate',
+    [operatorIds, [
+      {
+        validatorCount: 0,
+        networkFeeIndex: 64749941340n,
+        index: 77106991716n,
+        active: true,
+        balance: 5725985024910000000n
       }
-    }
-  }
+    ]]
+  )
 
   logger.log('liquidate finished')
 

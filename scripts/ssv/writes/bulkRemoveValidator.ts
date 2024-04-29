@@ -1,8 +1,8 @@
 import { logger } from "../../common/helpers/logger"
-import { account, publicClient, walletClient } from "../../common/helpers/clients"
 import { SSVNetworkAbi } from "../contracts/SSVNetworkContract"
-import { Address, BaseError, ContractFunctionRevertedError } from "viem"
+import { Address } from "viem"
 import { ClusterState } from "../../models/ClusterState"
+import { sendTx } from "../../common/helpers/sendTx"
 
 export async function bulkRemoveValidator(
   proxy: string,
@@ -12,30 +12,12 @@ export async function bulkRemoveValidator(
 ) {
   logger.log('bulkRemoveValidator started')
 
-  let txHash = ''
-
-  try {
-    const { request } = await publicClient.simulateContract({
-      address: proxy as Address,
-      abi: SSVNetworkAbi,
-      functionName: 'bulkRemoveValidator',
-      args: [publicKeys, operatorIds, cluster],
-      account
-    })
-
-    txHash = await walletClient.writeContract(request)
-  } catch (err) {
-    logger.error(err)
-
-    if (err instanceof BaseError) {
-      const revertError = err.walk(err => err instanceof ContractFunctionRevertedError)
-      if (revertError instanceof ContractFunctionRevertedError) {
-        const errorName = revertError.data?.errorName ?? ''
-
-        logger.error(errorName)
-      }
-    }
-  }
+  const txHash = await sendTx(
+    proxy as Address,
+    SSVNetworkAbi,
+    'bulkRemoveValidator',
+    [publicKeys, operatorIds, cluster]
+  )
 
   logger.log('bulkRemoveValidator finished')
 
