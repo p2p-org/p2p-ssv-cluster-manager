@@ -5,9 +5,6 @@ import { getIsValidatorRemoved } from "./scripts/ssv/reads/getIsValidatorRemoved
 import { exitValidator } from "./scripts/ssv/writes/exitValidator"
 import * as console from "console"
 import { setFeeRecipientAddress } from "./scripts/ssv/writes/setFeeRecipientAddress"
-import { getP2pSsvProxies } from "./scripts/ssv/reads/getP2pSsvProxies"
-import { getOperatorIdsForProxy } from "./scripts/ssv/reads/getOperatorIdsForProxy"
-import { getAddedValidatorsForProxy } from "./scripts/ssv/reads/getAddedValidatorsForProxy"
 import { removeExitedValidatorsFromClusters } from "./scripts/ssv/writes/removeExitedValidatorsFromClusters"
 
 
@@ -21,6 +18,10 @@ async function main() {
 
 async function test_exitValidator() {
     await exitValidator()
+}
+
+async function test_removeExitedValidatorsFromClusters() {
+    await removeExitedValidatorsFromClusters()
 }
 
 async function test_setFeeRecipientAddress() {
