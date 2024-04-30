@@ -1,4 +1,4 @@
-import {goerli, mainnet} from "viem/chains";
+import { holesky, mainnet } from "viem/chains"
 import {createPublicClient, createWalletClient, http} from "viem";
 import { privateKeyToAccount } from "viem/accounts"
 import process from "process"
@@ -7,7 +7,7 @@ if (!process.env.RPC_URL) {
     throw new Error("No RPC_URL in ENV")
 }
 
-const chain = process.env.RPC_URL.includes('goerli') ? goerli
+const chain = process.env.RPC_URL.includes('holesky') ? holesky
     : process.env.RPC_URL.includes('mainnet') ? mainnet : null
 
 if (!chain) {

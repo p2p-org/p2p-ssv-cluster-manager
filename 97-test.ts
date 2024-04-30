@@ -6,12 +6,17 @@ import { exitValidator } from "./scripts/ssv/writes/exitValidator"
 import * as console from "console"
 import { setFeeRecipientAddress } from "./scripts/ssv/writes/setFeeRecipientAddress"
 import { removeExitedValidatorsFromClusters } from "./scripts/ssv/writes/removeExitedValidatorsFromClusters"
+import { getHashToApprove } from "./scripts/safe/getHashToApprove"
+import { execTransaction } from "./scripts/safe/execTransaction"
 
 
 async function main() {
     logger.info('97-test started')
 
-    await removeExitedValidatorsFromClusters()
+    const transactions = '0x42'
+    // const hashToApprove = await getHashToApprove(transactions)
+    const txHash = await execTransaction(transactions)
+
 
     logger.info('97-test finished')
 }
