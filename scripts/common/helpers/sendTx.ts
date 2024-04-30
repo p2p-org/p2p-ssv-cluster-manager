@@ -1,6 +1,7 @@
 import { logger } from "./logger"
 import { account, publicClient, walletClient } from "./clients"
-import { Address, BaseError, ContractFunctionRevertedError } from "viem"
+import { Address, BaseError, ContractFunctionRevertedError, parseGwei } from "viem"
+import process from "process"
 
 export async function sendTx(
   address: Address,
@@ -10,6 +11,13 @@ export async function sendTx(
 ) {
   logger.log('sendTx started for ' + address + ' ' + functionName)
 
+  if (!process.env.MAX_FEE_PER_GAS_IN_GWEI) {
+    throw new Error("No MAX_FEE_PER_GAS_IN_GWEI in ENV")
+  }
+  if (!process.env.MAX_PIORITY_FEE_PER_GAS_IN_GWEI) {
+    throw new Error("No MAX_PIORITY_FEE_PER_GAS_IN_GWEI in ENV")
+  }
+
   let txHash = ''
 
   try {
@@ -18,7 +26,9 @@ export async function sendTx(
       abi,
       functionName,
       args,
-      account
+      account,
+      maxFeePerGas: parseGwei(process.env.MAX_FEE_PER_GAS_IN_GWEI),
+      maxPriorityFeePerGas: parseGwei(process.env.MAX_PIORITY_FEE_PER_GAS_IN_GWEI),
     })
 
     txHash = await walletClient.writeContract(request)

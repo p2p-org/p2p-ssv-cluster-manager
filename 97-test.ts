@@ -8,14 +8,42 @@ import { setFeeRecipientAddress } from "./scripts/ssv/writes/setFeeRecipientAddr
 import { removeExitedValidatorsFromClusters } from "./scripts/ssv/writes/removeExitedValidatorsFromClusters"
 import { getHashToApprove } from "./scripts/safe/getHashToApprove"
 import { execTransaction } from "./scripts/safe/execTransaction"
+import { encodeMultiSend } from "./scripts/safe/multisend"
+import { MetaTransaction } from "./scripts/safe/models/MetaTransaction"
+import process from "process"
+import { encodeFunctionData, parseEther } from "viem"
+import { MultiSendCallOnlyAbi } from "./scripts/safe/contracts/MultiSendCallOnlyAbi"
+import { P2pSsvProxyFactoryAbi } from "./scripts/ssv/contracts/P2pSsvProxyFactoryContract"
 
 
 async function main() {
     logger.info('97-test started')
 
-    const transactions = '0x42'
-    // const hashToApprove = await getHashToApprove(transactions)
-    const txHash = await execTransaction(transactions)
+    const data1 = encodeFunctionData({
+        abi: P2pSsvProxyFactoryAbi,
+        functionName: 'setMaxSsvTokenAmountPerValidator',
+        args: [parseEther("42")]
+    })
+    const data2 = encodeFunctionData({
+        abi: P2pSsvProxyFactoryAbi,
+        functionName: 'setAllowedSelectorsForOperator',
+        args: [['0x6a761202', '0x12345678']]
+    })
+
+    const metaTxs: MetaTransaction[] = [
+        {
+            to: process.env.P2P_SSV_PROXY_FACTORY_ADDRESS as `0x${string}`,
+            data: data1
+        },
+        {
+            to: process.env.P2P_SSV_PROXY_FACTORY_ADDRESS as `0x${string}`,
+            data: data2
+        }
+    ]
+
+    const txsForMultiSend = encodeMultiSend(metaTxs)
+    // const hashToApprove = await getHashToApprove(txsForMultiSend)
+    const txHash = await execTransaction(txsForMultiSend)
 
 
     logger.info('97-test finished')
