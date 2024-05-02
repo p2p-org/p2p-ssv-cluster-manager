@@ -8,6 +8,8 @@ import { logger } from "../../common/helpers/logger"
 import { publicClient } from "../../common/helpers/clients"
 import { getHashToApprove } from "../../safe/getHashToApprove"
 import { GnosisSafeAbi } from "../../safe/contracts/GnosisSafe"
+import { getAllClusterStates } from "../reads/getAllClusterStates"
+import { getDaysToLiquidation } from "../reads/getDaysToLiquidation"
 
 export async function transferSsvTokensFromFactoryToClusters() {
   logger.info('transferSsvTokensFromFactoryToClusters started')
@@ -21,13 +23,16 @@ export async function transferSsvTokensFromFactoryToClusters() {
   if (!process.env.SAFE_OWNER_ADDRESS_2) {
     throw new Error("No SAFE_OWNER_ADDRESS_2 in ENV")
   }
+  if (!process.env.ALLOWED_DAYS_TO_LIQUIDATION) {
+    throw new Error("No ALLOWED_DAYS_TO_LIQUIDATION in ENV")
+  }
 
   /*
 
   1. Fetch all clusters
   2. For each cluster:
-  3. Get liquidation date
-  4. If liquidation date is closer than a month from now:
+  3. Get days to liquidation
+  4. If days to liquidation < 30:
   5. Calculate the required token amount to have enough for a month
 
   Do this as 1 exec tx (first approve hash, then listen to the approval and then excute)
@@ -35,6 +40,17 @@ export async function transferSsvTokensFromFactoryToClusters() {
   7. Deposit tokens to clusters from safe
 
    */
+
+  const clusterStates = await getAllClusterStates()
+
+  for (const clusterState of clusterStates) {
+    const daysToLiquidation = await getDaysToLiquidation(clusterState)
+    const allowedDaysToLiquidation = BigInt(process.env.ALLOWED_DAYS_TO_LIQUIDATION)
+
+    if (daysToLiquidation < allowedDaysToLiquidation) {
+
+    }
+  }
 
 
   const data1 = encodeFunctionData({
