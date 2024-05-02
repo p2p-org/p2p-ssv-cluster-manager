@@ -18,7 +18,7 @@ export async function getHashToApprove(transactions: string) {
 
   const hashToApprove = await GnosisSafeContract.read.getTransactionHash([
     to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, _nonce
-  ])
+  ]) as string
 
   logger.log('getHashToApprove finished')
 
@@ -26,7 +26,7 @@ export async function getHashToApprove(transactions: string) {
     'Now please send "approveHash" tx with hashToApprove = ' +
     hashToApprove +
     ' to ' +
-    process.env.FEE_DISTRIBUTOR_FACTORY_OWNER_SAFE_ADDRESS +
+    process.env.SAFE_ADDRESS +
     ' from ' +
     process.env.SAFE_OWNER_ADDRESS_2
   )

@@ -33,7 +33,7 @@ export async function sendTx(
 
     txHash = await walletClient.writeContract(request)
 
-    console.log(txHash)
+    logger.log('Tx sent: ' + txHash)
   } catch (err) {
     logger.error(err)
 
