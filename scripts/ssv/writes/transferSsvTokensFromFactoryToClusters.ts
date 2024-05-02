@@ -44,7 +44,7 @@ export async function transferSsvTokensFromFactoryToClusters() {
   const clusterStates = await getAllClusterStates()
 
   for (const clusterState of clusterStates) {
-    const daysToLiquidation = await getDaysToLiquidation(clusterState)
+    const {daysToLiquidation, tokensToAdd} = await getDaysToLiquidation(clusterState)
     const allowedDaysToLiquidation = BigInt(process.env.ALLOWED_DAYS_TO_LIQUIDATION)
 
     if (daysToLiquidation < allowedDaysToLiquidation) {
