@@ -1,5 +1,6 @@
 import axios from "axios";
 import {logger} from "../../common/helpers/logger";
+import { isHolesky } from "../../common/helpers/clients"
 
 export async function getClusterIdFromApi(owner: string, operators: bigint[]): Promise<string> {
     const args = `owner/${owner}/operators/${operators.join(',')}`
@@ -10,7 +11,7 @@ export async function getClusterIdFromApi(owner: string, operators: bigint[]): P
     }
 
     const result = await axios.get(
-        'https://api.ssv.network/api/v4/mainnet/clusters/' + args
+      `https://api.ssv.network/api/v4/${isHolesky ? 'holesky' : 'mainnet'}/clusters/` + args
     )
 
     logger.info('getClusterFromApi finished for ' + args)

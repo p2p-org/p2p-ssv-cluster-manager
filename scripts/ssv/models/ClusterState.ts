@@ -3,5 +3,5 @@ export interface ClusterState {
   networkFeeIndex: bigint;
   index: bigint;
   active: boolean;
-  balance: bigint;
+  balance: bigint | number;
 }

@@ -7,7 +7,9 @@ if (!process.env.RPC_URL) {
     throw new Error("No RPC_URL in ENV")
 }
 
-const chain = process.env.RPC_URL.includes('holesky') ? holesky
+export const isHolesky = process.env.RPC_URL.includes('holesky')
+
+const chain = isHolesky ? holesky
     : process.env.RPC_URL.includes('mainnet') ? mainnet : null
 
 if (!chain) {

@@ -1,6 +1,7 @@
 import axios from "axios";
 import {logger} from "../../common/helpers/logger";
 import { ClusterStateApi } from "../models/ClusterStateApi"
+import { isHolesky } from "../../common/helpers/clients"
 
 export async function getClusterStateFromApi(owner: string, operators: bigint[]): Promise<ClusterStateApi> {
     const args = `owner/${owner}/operators/${operators.join(',')}`
@@ -11,7 +12,7 @@ export async function getClusterStateFromApi(owner: string, operators: bigint[])
     }
 
     const result = await axios.get(
-        'https://api.ssv.network/api/v4/mainnet/clusters/' + args
+        `https://api.ssv.network/api/v4/${isHolesky ? 'holesky' : 'mainnet'}/clusters/` + args
     )
 
     logger.info('getClusterStateFromApi finished for ' + args)

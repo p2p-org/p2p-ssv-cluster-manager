@@ -1,5 +1,5 @@
 import {logger} from "../../common/helpers/logger";
-import {publicClient} from "../../common/helpers/clients";
+import { isHolesky, publicClient } from "../../common/helpers/clients"
 import {decodeEventLog} from "viem";
 import {SSVNetworkAbi, SSVNetworkAddresss} from "../contracts/SSVNetworkContract";
 
@@ -10,7 +10,7 @@ export async function getAddedValidatorsForProxy(proxy: string) {
         address: SSVNetworkAddresss,
         abi: SSVNetworkAbi,
         eventName: 'ValidatorAdded',
-        fromBlock: 10000000n,
+        fromBlock: isHolesky ? 1502570n : 1000000n,
         toBlock: 'latest',
         strict: true,
         args: {
