@@ -1,15 +1,12 @@
-import { encodeFunctionData, parseEther } from "viem"
+import { encodeFunctionData } from "viem"
 import { P2pSsvProxyFactoryAbi } from "../contracts/P2pSsvProxyFactoryContract"
 import { MetaTransaction } from "../../safe/models/MetaTransaction"
-import process from "process"
-import { encodeMultiSend } from "../../safe/multisend"
-import { execTransaction } from "../../safe/execTransaction"
 import { logger } from "../../common/helpers/logger"
-import { publicClient } from "../../common/helpers/clients"
-import { getHashToApprove } from "../../safe/getHashToApprove"
-import { GnosisSafeAbi } from "../../safe/contracts/GnosisSafe"
-import { getAllClusterStates } from "../reads/getAllClusterStates"
-import { getDaysToLiquidation } from "../reads/getDaysToLiquidation"
+import { SSVTokenAbi } from "../contracts/SSVTokenContract"
+import { waitForHashToBeApprovedAndExecute } from "../../safe/waitForHashToBeApprovedAndExecute"
+import { ClusterStateApi } from "../models/ClusterStateApi"
+import { getClusterStatesToTopUp } from "../reads/getClusterStatesToTopUp"
+import { SSVNetworkAbi } from "../contracts/SSVNetworkContract"
 
 export async function transferSsvTokensFromFactoryToClusters() {
   logger.info('transferSsvTokensFromFactoryToClusters started')
@@ -23,8 +20,11 @@ export async function transferSsvTokensFromFactoryToClusters() {
   if (!process.env.SAFE_OWNER_ADDRESS_2) {
     throw new Error("No SAFE_OWNER_ADDRESS_2 in ENV")
   }
-  if (!process.env.ALLOWED_DAYS_TO_LIQUIDATION) {
-    throw new Error("No ALLOWED_DAYS_TO_LIQUIDATION in ENV")
+  if (!process.env.SSV_NETWORK_ADDRESS) {
+    throw new Error("No SSV_NETWORK_ADDRESS in ENV")
+  }
+  if (!process.env.SSV_TOKEN_ADDRESS) {
+    throw new Error("No SSV_TOKEN_ADDRESS in ENV")
   }
 
   /*
@@ -41,62 +41,71 @@ export async function transferSsvTokensFromFactoryToClusters() {
 
    */
 
-  const clusterStates = await getAllClusterStates()
+  const {clusterStatesToTopUp, totalTokensToTopUp} = await getClusterStatesToTopUp()
 
-  for (const clusterState of clusterStates) {
-    const {daysToLiquidation, tokensToAdd} = await getDaysToLiquidation(clusterState)
-    const allowedDaysToLiquidation = BigInt(process.env.ALLOWED_DAYS_TO_LIQUIDATION)
+  if (totalTokensToTopUp === 0n) {
+    logger.info('totalTokensToTopUp == 0 No need to top up.')
+    logger.info('transferSsvTokensFromFactoryToClusters finished')
+    return
+  }
+  const metaTxs = getMetaTxs(totalTokensToTopUp, clusterStatesToTopUp)
 
-    if (daysToLiquidation < allowedDaysToLiquidation) {
+  await waitForHashToBeApprovedAndExecute(metaTxs)
 
+  logger.info('transferSsvTokensFromFactoryToClusters finished')
+}
+
+type ClusterStateToTopUp = ClusterStateApi & {tokensToAdd: bigint}
+
+function getMetaTxs(
+  totalTokensToTopUp: bigint,
+  clusterStatesToTopUp: ClusterStateToTopUp[]
+) {
+
+  const metaTxs: MetaTransaction[] = []
+
+  const approveData = encodeFunctionData({
+    abi: SSVTokenAbi,
+    functionName: "approve",
+    args: [process.env.SSV_NETWORK_ADDRESS, totalTokensToTopUp]
+  })
+  const approveMetaTx = {
+    to: process.env.SSV_TOKEN_ADDRESS as `0x${string}`,
+    data: approveData
+  }
+  metaTxs.push(approveMetaTx)
+
+  const transferSsvTokensToGsData = encodeFunctionData({
+    abi: P2pSsvProxyFactoryAbi,
+    functionName: "transferERC20",
+    args: [process.env.SSV_TOKEN_ADDRESS, process.env.SAFE_ADDRESS, totalTokensToTopUp]
+  })
+  const transferSsvTokensToGsTx = {
+    to: process.env.P2P_SSV_PROXY_FACTORY_ADDRESS as `0x${string}`,
+    data: transferSsvTokensToGsData
+  }
+  metaTxs.push(transferSsvTokensToGsTx)
+
+  for (const clusterState of clusterStatesToTopUp) {
+    const cluster = {
+      validatorCount: clusterState.validatorCount,
+      networkFeeIndex: clusterState.networkFeeIndex,
+      index: clusterState.index,
+      active: clusterState.active,
+      balance: clusterState.balance
     }
+
+    const depositData = encodeFunctionData({
+      abi: SSVNetworkAbi,
+      functionName: "deposit",
+      args: [clusterState.ownerAddress, clusterState.operators, clusterState.tokensToAdd, cluster]
+    })
+    const depositMetaTx = {
+      to: process.env.SSV_NETWORK_ADDRESS as `0x${string}`,
+      data: depositData
+    }
+    metaTxs.push(depositMetaTx)
   }
 
-
-  const data1 = encodeFunctionData({
-    abi: P2pSsvProxyFactoryAbi,
-    functionName: 'setMaxSsvTokenAmountPerValidator',
-    args: [parseEther("42")]
-  })
-  const data2 = encodeFunctionData({
-    abi: P2pSsvProxyFactoryAbi,
-    functionName: 'setAllowedSelectorsForOperator',
-    args: [['0x6a761202', '0x12345678']]
-  })
-
-  const metaTxs: MetaTransaction[] = [
-    {
-      to: process.env.P2P_SSV_PROXY_FACTORY_ADDRESS as `0x${string}`,
-      data: data1
-    },
-    {
-      to: process.env.P2P_SSV_PROXY_FACTORY_ADDRESS as `0x${string}`,
-      data: data2
-    }
-  ]
-
-  const txsForMultiSend = encodeMultiSend(metaTxs)
-
-  const hashToApprove = await getHashToApprove(txsForMultiSend)
-
-  const unwatch = publicClient.watchContractEvent({
-    address: process.env.SAFE_ADDRESS as `0x${string}`,
-    abi: GnosisSafeAbi,
-    eventName: 'ApproveHash',
-    args: [hashToApprove, process.env.SAFE_OWNER_ADDRESS_2],
-    onError: async (error) => {
-      logger.error(error)
-      unwatch()
-      logger.info('transferSsvTokensFromFactoryToClusters finished')
-    },
-    onLogs: async (logs) => {
-      try {
-        await execTransaction(txsForMultiSend)
-        unwatch()
-        logger.info('transferSsvTokensFromFactoryToClusters finished')
-      } catch (error) {
-        logger.error(error)
-      }
-    }
-  })
+  return metaTxs
 }
