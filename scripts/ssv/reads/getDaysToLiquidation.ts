@@ -4,6 +4,8 @@ import { getOperatorFee } from "./getOperatorFee"
 import { getNetworkFee } from "./getNetworkFee"
 import { getMinimumLiquidationCollateral } from "./getMinimumLiquidationCollateral"
 import process from "process"
+import { blocksPerDay } from "../../common/helpers/constants"
+import { getCurrentClusterBalance } from "./getCurrentClusterBalance"
 
 export async function getDaysToLiquidation(clusterState: ClusterStateApi) {
   logger.info('getDaysToLiquidation started for ' + clusterState.clusterId)
@@ -14,10 +16,12 @@ export async function getDaysToLiquidation(clusterState: ClusterStateApi) {
 
   const allowedDaysToLiquidation = BigInt(process.env.ALLOWED_DAYS_TO_LIQUIDATION)
 
-  const {balance, validatorCount, operators} = clusterState
+  const {validatorCount, operators} = clusterState
+
+  const balance = await getCurrentClusterBalance(clusterState)
 
   const minimumLiquidationCollateral = await getMinimumLiquidationCollateral()
-  const balanceAfterMinimumLiquidationCollateral = BigInt(balance) - minimumLiquidationCollateral
+  const balanceAfterMinimumLiquidationCollateral = balance - minimumLiquidationCollateral
   const balancePerValidator = balanceAfterMinimumLiquidationCollateral / BigInt(validatorCount)
 
   let totalFeePerBlock = 0n
@@ -30,13 +34,12 @@ export async function getDaysToLiquidation(clusterState: ClusterStateApi) {
   totalFeePerBlock += networkFee
 
   const blocksToLiquidation = balancePerValidator / totalFeePerBlock
-  const blocksPerDay = 7200n
   const daysToLiquidation = blocksToLiquidation / blocksPerDay
   logger.info('Days To Liquidation = ' + daysToLiquidation)
 
   const neededBalancePerValidator = totalFeePerBlock * blocksPerDay * allowedDaysToLiquidation
   const targetBalance = neededBalancePerValidator * BigInt(validatorCount) + minimumLiquidationCollateral
-  const tokensToAdd = targetBalance - BigInt(balance)
+  const tokensToAdd = targetBalance - balance
   logger.info('tokensToAdd = ' + tokensToAdd)
 
   logger.info('getDaysToLiquidation finished for ' + clusterState.clusterId)

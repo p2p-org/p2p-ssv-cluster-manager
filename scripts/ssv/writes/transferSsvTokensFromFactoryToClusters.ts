@@ -4,7 +4,7 @@ import { MetaTransaction } from "../../safe/models/MetaTransaction"
 import { logger } from "../../common/helpers/logger"
 import { SSVTokenAbi } from "../contracts/SSVTokenContract"
 import { waitForHashToBeApprovedAndExecute } from "../../safe/waitForHashToBeApprovedAndExecute"
-import { ClusterStateApi } from "../models/ClusterStateApi"
+import { ClusterStateApi, toClusterState } from "../models/ClusterStateApi"
 import { getClusterStatesToTopUp } from "../reads/getClusterStatesToTopUp"
 import { SSVNetworkAbi } from "../contracts/SSVNetworkContract"
 
@@ -26,20 +26,6 @@ export async function transferSsvTokensFromFactoryToClusters() {
   if (!process.env.SSV_TOKEN_ADDRESS) {
     throw new Error("No SSV_TOKEN_ADDRESS in ENV")
   }
-
-  /*
-
-  1. Fetch all clusters
-  2. For each cluster:
-  3. Get days to liquidation
-  4. If days to liquidation < 30:
-  5. Calculate the required token amount to have enough for a month
-
-  Do this as 1 exec tx (first approve hash, then listen to the approval and then excute)
-  6. Withdraw tokens from factory to safe (once for all clusters), if not enough - throw an error
-  7. Deposit tokens to clusters from safe
-
-   */
 
   const {clusterStatesToTopUp, totalTokensToTopUp} = await getClusterStatesToTopUp()
 
@@ -86,19 +72,13 @@ function getMetaTxs(
   }
   metaTxs.push(transferSsvTokensToGsTx)
 
-  for (const clusterState of clusterStatesToTopUp) {
-    const cluster = {
-      validatorCount: clusterState.validatorCount,
-      networkFeeIndex: clusterState.networkFeeIndex,
-      index: clusterState.index,
-      active: clusterState.active,
-      balance: clusterState.balance
-    }
+  for (const clusterStateApi of clusterStatesToTopUp) {
+    const cluster = toClusterState(clusterStateApi)
 
     const depositData = encodeFunctionData({
       abi: SSVNetworkAbi,
       functionName: "deposit",
-      args: [clusterState.ownerAddress, clusterState.operators, clusterState.tokensToAdd, cluster]
+      args: [clusterStateApi.ownerAddress, clusterStateApi.operators, clusterStateApi.tokensToAdd, cluster]
     })
     const depositMetaTx = {
       to: process.env.SSV_NETWORK_ADDRESS as `0x${string}`,

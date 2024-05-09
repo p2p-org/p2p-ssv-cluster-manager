@@ -13,6 +13,9 @@
     "typescript": "5.1.6"
   },
   "scripts": {
+    "01-transfer-ssv-tokens-from-factory-to-clusters": "ts-node 01-transfer-ssv-tokens-from-factory-to-clusters.ts",
+    "02-remove-exited-validators-from-clusters": "ts-node 02-remove-exited-validators-from-clusters.ts",
+    "03-withdraw-excess-tokens-from-clusters": "ts-node 03-withdraw-excess-tokens-from-clusters.ts",
     "97-test": "ts-node 97-test.ts",
     "start": "ts-node index.ts"
   }

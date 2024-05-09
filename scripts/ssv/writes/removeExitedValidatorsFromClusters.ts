@@ -5,8 +5,11 @@ import { bulkRemoveValidator } from "./bulkRemoveValidator"
 import { getProxiesToClustersWithPubkeys } from "../reads/getProxiesToClustersWithPubkeys"
 import { getClusterStateFromApi } from "../reads/getClusterStateFromApi"
 import { ClusterState } from "../models/ClusterState"
+import { toClusterState } from "../models/ClusterStateApi"
 
 export async function removeExitedValidatorsFromClusters() {
+  logger.info('removeExitedValidatorsFromClusters started')
+
   const proxiesToClustersWithPubkeys = await getProxiesToClustersWithPubkeys()
   const proxies = Object.keys(proxiesToClustersWithPubkeys)
 
@@ -32,17 +35,13 @@ export async function removeExitedValidatorsFromClusters() {
       if (pubkeysToRemove.length) {
         const operatorIds = proxiesToClustersWithPubkeys[proxy][clusterKey][0].operatorIds
         const clusterStateApi = await getClusterStateFromApi(proxy, operatorIds)
-        const clusterState: ClusterState = {
-          validatorCount: clusterStateApi.validatorCount,
-          networkFeeIndex: clusterStateApi.networkFeeIndex,
-          index: clusterStateApi.index,
-          active: clusterStateApi.active,
-          balance: clusterStateApi.balance
-        }
+        const clusterState: ClusterState = toClusterState(clusterStateApi)
 
         await bulkRemoveValidator(proxy, pubkeysToRemove, operatorIds, clusterState)
       }
     }
 
   }
+
+  logger.info('removeExitedValidatorsFromClusters finished')
 }
