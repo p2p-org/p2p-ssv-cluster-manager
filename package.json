@@ -3,15 +3,22 @@
   "author": "P2P Validator <info@p2p.org>",
   "homepage": "https://p2p.org/",
   "license": "MIT",
-  "scripts": {
-    "start": "ts-node index.ts"
-  },
-  "dependencies": {
+  "devDependencies": {
+    "@types/express": "4.17.21",
+    "@types/node": "20.11.17",
+    "axios": "1.6.7",
+    "dotenv": "16.4.5",
+    "express": "4.19.2",
+    "log4js": "6.9.1",
+    "ts-node": "10.9.2",
+    "typescript": "5.1.6",
     "viem": "2.7.6"
   },
-  "devDependencies": {
-    "@types/node": "20.11.17",
-    "ts-node": "10.9.2",
-    "typescript": "5.1.6"
+  "scripts": {
+    "01-transfer-ssv-tokens-from-factory-to-clusters": "ts-node 01-transfer-ssv-tokens-from-factory-to-clusters.ts",
+    "02-remove-exited-validators-from-clusters": "ts-node 02-remove-exited-validators-from-clusters.ts",
+    "03-withdraw-excess-tokens-from-clusters": "ts-node 03-withdraw-excess-tokens-from-clusters.ts",
+    "97-test": "ts-node 97-test.ts",
+    "start": "ts-node index.ts"
   }
 }
