@@ -1,4 +1,4 @@
-import { ClusterState } from "./ClusterState"
+import { ClusterState } from './ClusterState'
 
 export interface ClusterStateApi extends ClusterState {
   id: number
@@ -18,7 +18,7 @@ export function toClusterState(clusterStateApi: ClusterStateApi): ClusterState {
     networkFeeIndex: clusterStateApi.networkFeeIndex,
     index: clusterStateApi.index,
     active: clusterStateApi.active,
-    balance: clusterStateApi.balance
+    balance: clusterStateApi.balance,
   }
 
   return clusterState

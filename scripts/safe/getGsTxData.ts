@@ -1,9 +1,9 @@
-import { encodeFunctionData, zeroAddress } from "viem"
-import { MultiSendCallOnlyAbi } from "./contracts/MultiSendCallOnlyAbi"
+import { encodeFunctionData, zeroAddress } from 'viem'
+import { MultiSendCallOnlyAbi } from './contracts/MultiSendCallOnlyAbi'
 
 export function getGsTxData(transactions: string) {
   if (!process.env.MULTISEND_CALL_ONLY_ADDRESS) {
-    throw new Error("No MULTISEND_CALL_ONLY_ADDRESS in ENV")
+    throw new Error('No MULTISEND_CALL_ONLY_ADDRESS in ENV')
   }
 
   const to = process.env.MULTISEND_CALL_ONLY_ADDRESS
@@ -18,11 +18,18 @@ export function getGsTxData(transactions: string) {
   const data = encodeFunctionData({
     abi: MultiSendCallOnlyAbi,
     functionName: 'multiSend',
-    args: [transactions]
+    args: [transactions],
   })
 
   return {
-    to, value, operation, safeTxGas, baseGas,
-    gasPrice, gasToken, refundReceiver, data
+    to,
+    value,
+    operation,
+    safeTxGas,
+    baseGas,
+    gasPrice,
+    gasToken,
+    refundReceiver,
+    data,
   }
 }

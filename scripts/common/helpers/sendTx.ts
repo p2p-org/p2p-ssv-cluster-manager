@@ -1,21 +1,26 @@
-import { logger } from "./logger"
-import { account, publicClient, walletClient } from "./clients"
-import { Address, BaseError, ContractFunctionRevertedError, parseGwei } from "viem"
-import process from "process"
+import { logger } from './logger'
+import { account, publicClient, walletClient } from './clients'
+import {
+  Address,
+  BaseError,
+  ContractFunctionRevertedError,
+  parseGwei,
+} from 'viem'
+import process from 'process'
 
 export async function sendTx(
   address: Address,
   abi: unknown[],
   functionName: string,
-  args: unknown[]
+  args: unknown[],
 ) {
   logger.log('sendTx started for ' + address + ' ' + functionName)
 
   if (!process.env.MAX_FEE_PER_GAS_IN_GWEI) {
-    throw new Error("No MAX_FEE_PER_GAS_IN_GWEI in ENV")
+    throw new Error('No MAX_FEE_PER_GAS_IN_GWEI in ENV')
   }
   if (!process.env.MAX_PIORITY_FEE_PER_GAS_IN_GWEI) {
-    throw new Error("No MAX_PIORITY_FEE_PER_GAS_IN_GWEI in ENV")
+    throw new Error('No MAX_PIORITY_FEE_PER_GAS_IN_GWEI in ENV')
   }
 
   let txHash = ''
@@ -28,8 +33,10 @@ export async function sendTx(
       args,
       account,
       maxFeePerGas: parseGwei(process.env.MAX_FEE_PER_GAS_IN_GWEI),
-      maxPriorityFeePerGas: parseGwei(process.env.MAX_PIORITY_FEE_PER_GAS_IN_GWEI),
-      gas: 10000000n
+      maxPriorityFeePerGas: parseGwei(
+        process.env.MAX_PIORITY_FEE_PER_GAS_IN_GWEI,
+      ),
+      gas: 10000000n,
     })
 
     txHash = await walletClient.writeContract(request)
@@ -39,7 +46,9 @@ export async function sendTx(
     logger.error(err)
 
     if (err instanceof BaseError) {
-      const revertError = err.walk(err => err instanceof ContractFunctionRevertedError)
+      const revertError = err.walk(
+        (err) => err instanceof ContractFunctionRevertedError,
+      )
       if (revertError instanceof ContractFunctionRevertedError) {
         const errorName = revertError.data?.errorName ?? ''
 

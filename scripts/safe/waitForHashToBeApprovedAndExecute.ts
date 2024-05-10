@@ -1,14 +1,20 @@
-import { logger } from "../common/helpers/logger"
-import { encodeMultiSend } from "./multisend"
-import { getHashToApprove } from "./getHashToApprove"
-import { publicClient } from "../common/helpers/clients"
-import process from "process"
-import { GnosisSafeAbi } from "./contracts/GnosisSafe"
-import { execTransaction } from "./execTransaction"
-import { MetaTransaction } from "./models/MetaTransaction"
+import { logger } from '../common/helpers/logger'
+import { encodeMultiSend } from './multisend'
+import { getHashToApprove } from './getHashToApprove'
+import { publicClient } from '../common/helpers/clients'
+import process from 'process'
+import { GnosisSafeAbi } from './contracts/GnosisSafe'
+import { execTransaction } from './execTransaction'
+import { MetaTransaction } from './models/MetaTransaction'
 
-export async function waitForHashToBeApprovedAndExecute(metaTxs: MetaTransaction[]) {
-  logger.info('waitForHashToBeApprovedAndExecute started for ' + metaTxs.length + ' metaTxs')
+export async function waitForHashToBeApprovedAndExecute(
+  metaTxs: MetaTransaction[],
+) {
+  logger.info(
+    'waitForHashToBeApprovedAndExecute started for ' +
+      metaTxs.length +
+      ' metaTxs',
+  )
 
   const txsForMultiSend = encodeMultiSend(metaTxs)
 
@@ -34,8 +40,12 @@ export async function waitForHashToBeApprovedAndExecute(metaTxs: MetaTransaction
         logger.info('Error occurred while executing GS tx')
         logger.error(error)
       }
-    }
+    },
   })
 
-  logger.info('waitForHashToBeApprovedAndExecute finished for ' + metaTxs.length + ' metaTxs')
+  logger.info(
+    'waitForHashToBeApprovedAndExecute finished for ' +
+      metaTxs.length +
+      ' metaTxs',
+  )
 }

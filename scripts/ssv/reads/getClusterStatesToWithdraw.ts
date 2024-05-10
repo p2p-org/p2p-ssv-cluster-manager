@@ -1,6 +1,6 @@
-import { logger } from "../../common/helpers/logger"
-import { getAllClusterStates } from "./getAllClusterStates"
-import { getExcessTokensToWithdraw } from "./getExcessTokensToWithdraw"
+import { logger } from '../../common/helpers/logger'
+import { getAllClusterStates } from './getAllClusterStates'
+import { getExcessTokensToWithdraw } from './getExcessTokensToWithdraw'
 
 export async function getClusterStatesToWithdraw() {
   logger.info('getClusterStatesToWithdraw started')
@@ -11,8 +11,9 @@ export async function getClusterStatesToWithdraw() {
   for (const clusterState of clusterStates) {
     const tokensToWithdraw = await getExcessTokensToWithdraw(clusterState)
 
-    if (tokensToWithdraw > 1n) { // > 1 wei
-      clusterStatesToWithdraw.push({...clusterState, tokensToWithdraw})
+    if (tokensToWithdraw > 1n) {
+      // > 1 wei
+      clusterStatesToWithdraw.push({ ...clusterState, tokensToWithdraw })
     }
   }
 

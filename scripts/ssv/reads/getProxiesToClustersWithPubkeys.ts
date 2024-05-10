@@ -1,48 +1,47 @@
-import {logger} from "../../common/helpers/logger";
-import {getP2pSsvProxies} from "./getP2pSsvProxies";
-import {getPubkeysForProxy} from "./getPubkeysForProxy";
-import { getOperatorIdsForProxy } from "./getOperatorIdsForProxy"
-import { getProxiesWithOperatorIds } from "./getProxiesWithOperatorIds"
-import { getClusterIdFromApi } from "./getClusterIdFromApi"
-import { getAddedValidatorsForProxy } from "./getAddedValidatorsForProxy"
+import { logger } from '../../common/helpers/logger'
+import { getP2pSsvProxies } from './getP2pSsvProxies'
+import { getAddedValidatorsForProxy } from './getAddedValidatorsForProxy'
 
 export async function getProxiesToClustersWithPubkeys() {
-    logger.log('getProxiesToClustersWithPubkeys started')
+  logger.log('getProxiesToClustersWithPubkeys started')
 
-    const proxies = await getP2pSsvProxies()
+  const proxies = await getP2pSsvProxies()
 
-    const proxiesToClustersWithPubkeys: ProxyToClusterMap = {};
+  const proxiesToClustersWithPubkeys: ProxyToClusterMap = {}
 
-    const proxiesToOperatorIdsWithPubkeys: ProxyToOperatorMap = {}
-    for (const proxy of proxies) {
-        proxiesToOperatorIdsWithPubkeys[proxy] = await getAddedValidatorsForProxy(proxy)
+  const proxiesToOperatorIdsWithPubkeys: ProxyToOperatorMap = {}
+  for (const proxy of proxies) {
+    proxiesToOperatorIdsWithPubkeys[proxy] =
+      await getAddedValidatorsForProxy(proxy)
+  }
+
+  for (const [proxy, operators] of Object.entries(
+    proxiesToOperatorIdsWithPubkeys,
+  )) {
+    const clusterMap: Record<string, OperatorIdWithPubkey[]> = {}
+
+    for (const { operatorIds, publicKey } of operators) {
+      const key = operatorIds.join(',')
+
+      if (!clusterMap[key]) {
+        clusterMap[key] = []
+      }
+
+      clusterMap[key].push({ operatorIds, publicKey })
     }
 
-    for (const [proxy, operators] of Object.entries(proxiesToOperatorIdsWithPubkeys)) {
-        const clusterMap: Record<string, OperatorIdWithPubkey[]> = {};
+    proxiesToClustersWithPubkeys[proxy] = clusterMap
+  }
 
-        for (const { operatorIds, publicKey } of operators) {
-            const key = operatorIds.join(',');
+  logger.log('getProxiesToClustersWithPubkeys finished')
 
-            if (!clusterMap[key]) {
-                clusterMap[key] = [];
-            }
-
-            clusterMap[key].push({ operatorIds, publicKey });
-        }
-
-        proxiesToClustersWithPubkeys[proxy] = clusterMap;
-    }
-
-    logger.log('getProxiesToClustersWithPubkeys finished')
-
-    return proxiesToClustersWithPubkeys
+  return proxiesToClustersWithPubkeys
 }
 
 type OperatorIdWithPubkey = {
-    operatorIds: bigint[],
-    publicKey: string
-};
+  operatorIds: bigint[]
+  publicKey: string
+}
 
-type ProxyToOperatorMap = Record<string, OperatorIdWithPubkey[]>;
-type ProxyToClusterMap = Record<string, Record<string, OperatorIdWithPubkey[]>>;
+type ProxyToOperatorMap = Record<string, OperatorIdWithPubkey[]>
+type ProxyToClusterMap = Record<string, Record<string, OperatorIdWithPubkey[]>>
