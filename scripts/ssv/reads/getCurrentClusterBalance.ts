@@ -18,6 +18,8 @@ export async function getCurrentClusterBalance(
       cluster,
     ])) as bigint
 
+    logger.info('currentBalance = ', currentBalance)
+
     logger.info(
       'getCurrentClusterBalance finished for ' + clusterStateApi.clusterId,
     )

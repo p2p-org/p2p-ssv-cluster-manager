@@ -17,6 +17,7 @@ export async function getClusterStatesToTopUp() {
   for (const clusterState of clusterStates) {
     const { daysToLiquidation, tokensToAdd } =
       await getDaysToLiquidation(clusterState)
+
     const allowedDaysToLiquidation = BigInt(
       process.env.ALLOWED_DAYS_TO_LIQUIDATION,
     )

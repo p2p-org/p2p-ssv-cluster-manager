@@ -6,6 +6,7 @@ import { getMinimumLiquidationCollateral } from './getMinimumLiquidationCollater
 import process from 'process'
 import { blocksPerDay } from '../../common/helpers/constants'
 import { getCurrentClusterBalance } from './getCurrentClusterBalance'
+import { getLiquidationThresholdPeriod } from './getLiquidationThresholdPeriod'
 
 export async function getDaysToLiquidation(clusterState: ClusterStateApi) {
   logger.info('getDaysToLiquidation started for ' + clusterState.clusterId)
@@ -20,13 +21,9 @@ export async function getDaysToLiquidation(clusterState: ClusterStateApi) {
 
   const { validatorCount, operators } = clusterState
 
-  const balance = await getCurrentClusterBalance(clusterState)
-
-  const minimumLiquidationCollateral = await getMinimumLiquidationCollateral()
-  const balanceAfterMinimumLiquidationCollateral =
-    balance - minimumLiquidationCollateral
-  const balancePerValidator =
-    balanceAfterMinimumLiquidationCollateral / BigInt(validatorCount)
+  if (validatorCount === 0) {
+    return { daysToLiquidation: 100500n, tokensToAdd: 0n }
+  }
 
   let totalFeePerBlock = 0n
   for (const operatorId of operators) {
@@ -37,6 +34,25 @@ export async function getDaysToLiquidation(clusterState: ClusterStateApi) {
   const networkFee = await getNetworkFee()
   totalFeePerBlock += networkFee
 
+
+  const balance = await getCurrentClusterBalance(clusterState)
+  const minimumLiquidationCollateral = await getMinimumLiquidationCollateral()
+
+  const liquidationThresholdPeriod = await getLiquidationThresholdPeriod()
+  const collateralForLiquidationThresholdPeriod = liquidationThresholdPeriod *
+    totalFeePerBlock *
+    BigInt(validatorCount)
+
+  const collateral = minimumLiquidationCollateral > collateralForLiquidationThresholdPeriod
+    ? minimumLiquidationCollateral
+    : collateralForLiquidationThresholdPeriod
+
+  const balanceAfterMinimumLiquidationCollateral =
+    balance - collateral
+  const balancePerValidator =
+    balanceAfterMinimumLiquidationCollateral / BigInt(validatorCount)
+
+
   const blocksToLiquidation = balancePerValidator / totalFeePerBlock
   const daysToLiquidation = blocksToLiquidation / blocksPerDay
   logger.info('Days To Liquidation = ' + daysToLiquidation)
@@ -45,7 +61,7 @@ export async function getDaysToLiquidation(clusterState: ClusterStateApi) {
     totalFeePerBlock * blocksPerDay * allowedDaysToLiquidation
   const targetBalance =
     neededBalancePerValidator * BigInt(validatorCount) +
-    minimumLiquidationCollateral
+    collateral
   const tokensToAdd = targetBalance - balance
   logger.info('tokensToAdd = ' + tokensToAdd)
 
