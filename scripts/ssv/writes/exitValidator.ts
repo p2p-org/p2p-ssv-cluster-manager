@@ -6,11 +6,11 @@ export async function exitValidator() {
   logger.log('exitValidator started')
 
   const publicKey =
-    '0xaf1af4ff38f09d3f0e6bb15637cd69a435b4d56437b07c058ed0e47511cecc6354730739dbd2389ffb112d62927e1a60'
+    '0xa3aec4006338aa6cddb2eb96de7bc685bf60848fe8bd78ea9979b2e227e53364ada842282a55c1bb9058b7f522e5ebfa'
   const operatorIds = [192, 195, 200, 201]
 
   const txHash = await sendTx(
-    '0x5071e29F49F9B008267D2Ed76D54B32D91695cDe',
+    '0x944991724cFA9E218f73bA03608913dA9a21F9b7',
     SSVNetworkAbi,
     'exitValidator',
     [publicKey, operatorIds],

@@ -10,7 +10,7 @@ import { transferSsvTokensFromFactoryToClusters } from './scripts/ssv/writes/tra
 async function main() {
   logger.info('97-test started')
 
-  await transferSsvTokensFromFactoryToClusters()
+  await exitValidator()
 
   logger.info('97-test finished')
 }
