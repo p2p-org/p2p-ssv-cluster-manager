@@ -6,11 +6,13 @@ import { exitValidator } from './scripts/ssv/writes/exitValidator'
 import { setFeeRecipientAddress } from './scripts/ssv/writes/setFeeRecipientAddress'
 import { removeExitedValidatorsFromClusters } from './scripts/ssv/writes/removeExitedValidatorsFromClusters'
 import { transferSsvTokensFromFactoryToClusters } from './scripts/ssv/writes/transferSsvTokensFromFactoryToClusters'
+import { getClusterPubkeysPageFromApi } from './scripts/ssv/reads/getClusterPubkeysPageFromApi'
+import { bulkExitValidator } from './scripts/ssv/writes/bulkExitValidator'
 
 async function main() {
   logger.info('97-test started')
 
-  await exitValidator()
+  await  bulkExitValidator()
 
   logger.info('97-test finished')
 }
