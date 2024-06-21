@@ -12,7 +12,7 @@ import { bulkExitValidator } from './scripts/ssv/writes/bulkExitValidator'
 async function main() {
   logger.info('97-test started')
 
-  await  bulkExitValidator()
+  await bulkExitValidator()
 
   logger.info('97-test finished')
 }

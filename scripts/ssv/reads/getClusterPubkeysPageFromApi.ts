@@ -21,7 +21,7 @@ export async function getClusterPubkeysPageFromApi(
   logger.info('getClusterPubkeysPageFromApi finished for ' + args)
   return (result.data.validators as ValidatorApi[])
     .filter((v: ValidatorApi) => v.is_valid && !v.is_deleted)
-    .map(v => v.public_key)
+    .map(v => '0x' + v.public_key)
 }
 
 interface ValidatorApi {

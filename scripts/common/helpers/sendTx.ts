@@ -36,7 +36,7 @@ export async function sendTx(
       maxPriorityFeePerGas: parseGwei(
         process.env.MAX_PIORITY_FEE_PER_GAS_IN_GWEI,
       ),
-      gas: 10000000n,
+      gas: 15000000n,
     })
 
     txHash = await walletClient.writeContract(request)

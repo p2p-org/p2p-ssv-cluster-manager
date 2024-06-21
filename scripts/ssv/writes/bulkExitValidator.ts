@@ -16,7 +16,7 @@ export async function bulkExitValidator() {
     '0xc2d42368d94E2D5d82F3b05a06Ec53eBFb81Ce0f',
     SSVNetworkAbi,
     'bulkExitValidator',
-    [publicKeys.slice(0, 2), operatorIds],
+    [publicKeys, operatorIds],
   )
 
   logger.log('bulkExitValidator finished')
