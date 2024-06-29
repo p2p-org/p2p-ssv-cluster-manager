@@ -6,7 +6,7 @@ export async function exitValidator() {
   logger.log('exitValidator started')
 
   const publicKey =
-    '0x95e3923136465fe4daa40a593c389ddea1b075627a09c388df65ae854b082620d669fb799fd49b19320912d1b2051e07'
+    '0xb9634a73f8cae79e8f8e9758b76c1777d6f2bfbd851e7845b7a4adbf69cca4338adda1ff03360692a2a29b144a498e7f'
   const operatorIds = [374, 378, 382, 386]
 
   const txHash = await sendTx(

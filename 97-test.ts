@@ -12,13 +12,17 @@ import { bulkExitValidator } from './scripts/ssv/writes/bulkExitValidator'
 async function main() {
   logger.info('97-test started')
 
-  await bulkExitValidator()
+  await exitValidator()
 
   logger.info('97-test finished')
 }
 
 async function test_exitValidator() {
   await exitValidator()
+}
+
+async function test_bulkExitValidator() {
+  await bulkExitValidator()
 }
 
 async function test_removeExitedValidatorsFromClusters() {
