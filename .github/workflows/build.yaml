@@ -1,0 +1,82 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  REGISTRY: europe-west4-docker.pkg.dev
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+    outputs:
+      author-name: ${{ steps.author-name.outputs.author-name }}
+      author-email: ${{ steps.author-email.outputs.author-email }}
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+#
+      - name: Build Image
+        id: build-image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: iaas-383414/p2p-ssv-cluster-manager/main
+          context: .
+          tags: sha-${{ github.sha }}
+          containerfiles: |
+            ./Dockerfile
+
+      - uses: 'google-github-actions/auth@v2'
+        id: auth
+        with:
+          project_id: iaas-383414
+          workload_identity_provider: projects/802839937832/locations/global/workloadIdentityPools/iaas-pipelines-iaas/providers/github-all-p2p-org-repos
+
+      - name: Push to Artifact Registry
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags: ${{ steps.build-image.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
+          username: oauth2accesstoken
+          password: "${{ steps.auth.outputs.auth_token }}"
+      - id: author-name
+        run: echo "author-name=$(git log -1 --pretty=format:'%an')" >> $GITHUB_OUTPUT
+      - id: author-email
+        run: echo "author-email=$(git log -1 --pretty=format:'%ae')" >> $GITHUB_OUTPUT
+
+  # todo: switch to separate dev/prod deploy workflows
+  update-refs:
+    runs-on: ubuntu-latest
+    needs: docker-build
+    steps:
+      # change p2p-ssv-cluster-manager images tag reference in k8s-specs repository
+      - uses: actions/checkout@master
+        with:
+          repository: p2p-org/p2pwebsite-k8s-specs
+          ssh-key: ${{ secrets.K8S_SPECS_KEY }}
+
+      - name: update image tag
+        env:
+          _BUILD_TAG: sha-${{ github.sha }}
+        run: |
+          # dev
+          yq eval ".image.tag = \"${_BUILD_TAG}\"" -i charts/p2pwebsite-ssv-cluster-manager/values.dev.yaml
+          # prod
+          yq eval ".image.tag = \"${_BUILD_TAG}\"" -i charts/p2pwebsite-ssv-cluster-manager/values.prod.yaml
+
+      - name: push changes
+        env:
+          AUTHOR_NAME: ${{ needs.docker-build.outputs.author-name }}
+          AUTHOR_EMAIL: ${{ needs.docker-build.outputs.author-email }}
+          _BUILD_TAG: sha-${{ github.sha }}
+        run: |
+          git config user.name $AUTHOR_NAME
+          git config user.email $AUTHOR_EMAIL
+          git commit -am "Update p2pwebsite-ssv-cluster-manager images to ${_BUILD_TAG}"
+          git push
