@@ -2,30 +2,31 @@ import { logger } from '../../common/helpers/logger'
 import { P2pSsvProxyContractAbi } from '../contracts/P2pSsvProxyContractAbi'
 import { sendTx } from '../../common/helpers/sendTx'
 
-export async function liquidate() {
-  logger.log('liquidate started')
+export async function reactivate() {
+  logger.log('reactivate started')
 
-  const operatorIds = [192, 195, 200, 201]
+  const operatorIds = [563n, 564n, 565n, 566n]
 
   const txHash = await sendTx(
-    '0x5071e29F49F9B008267D2Ed76D54B32D91695cDe',
+    '0x996F80A9e6D2743643787CD94714430E86F77A46',
     P2pSsvProxyContractAbi,
-    'liquidate',
+    'reactivate',
     [
+      50000000000000000000n,
       operatorIds,
       [
         {
-          validatorCount: 0,
-          networkFeeIndex: 64749941340n,
-          index: 77106991716n,
-          active: true,
-          balance: 5725985024910000000n,
+          validatorCount: 29,
+          networkFeeIndex: 0n,
+          index: 0n,
+          active: false,
+          balance: 0n,
         },
       ],
     ],
   )
 
-  logger.log('liquidate finished')
+  logger.log('reactivate finished')
 
   return txHash
 }

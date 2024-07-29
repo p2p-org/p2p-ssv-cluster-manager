@@ -3,6 +3,7 @@ import { logger } from './scripts/common/helpers/logger'
 import { getIsValidatorExited } from './scripts/ssv/reads/getIsValidatorExited'
 import { getIsValidatorRemoved } from './scripts/ssv/reads/getIsValidatorRemoved'
 import { exitValidator } from './scripts/ssv/writes/exitValidator'
+import { reactivate } from './scripts/ssv/writes/reactivate'
 import { setFeeRecipientAddress } from './scripts/ssv/writes/setFeeRecipientAddress'
 import { removeExitedValidatorsFromClusters } from './scripts/ssv/writes/removeExitedValidatorsFromClusters'
 import { transferSsvTokensFromFactoryToClusters } from './scripts/ssv/writes/transferSsvTokensFromFactoryToClusters'
@@ -10,7 +11,7 @@ import { transferSsvTokensFromFactoryToClusters } from './scripts/ssv/writes/tra
 async function main() {
   logger.info('97-test started')
 
-  await transferSsvTokensFromFactoryToClusters()
+  await reactivate()
 
   logger.info('97-test finished')
 }
