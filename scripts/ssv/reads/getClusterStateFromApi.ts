@@ -20,5 +20,5 @@ export async function getClusterStateFromApi(
   )
 
   logger.info('getClusterStateFromApi finished for ' + args)
-  return result.data.cluster as ClusterStateApi
+  return result.data.data as ClusterStateApi
 }
