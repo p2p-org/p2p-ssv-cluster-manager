@@ -16,9 +16,9 @@ export async function getClusterStateFromApi(
 
   const result = await axios.get(
     `https://api.ssv.network/api/v4/${isHolesky ? 'holesky' : 'mainnet'}/clusters/` +
-      args,
+    args,
   )
 
   logger.info('getClusterStateFromApi finished for ' + args)
-  return result.data.data as ClusterStateApi
+  return result.data.cluster as ClusterStateApi
 }
