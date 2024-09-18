@@ -5,6 +5,7 @@ import {
 } from '../contracts/P2pSsvProxyFactoryContract'
 import { isHolesky, publicClient } from '../../common/helpers/clients'
 import { decodeEventLog } from 'viem'
+import { getP2pSsvProxies_3_1 } from './getP2pSsvProxies_3_1'
 
 export async function getP2pSsvProxies() {
   logger.info('getP2pSsvProxies started')
@@ -32,6 +33,9 @@ export async function getP2pSsvProxies() {
   logger.info('getP2pSsvProxies finished')
 
   const uniqueProxies = new Set(proxies)
+
+  const proxies_3_1 = await getP2pSsvProxies_3_1()
+  proxies_3_1.forEach(p => uniqueProxies.add(p))
 
   return uniqueProxies
 }
