@@ -5,9 +5,13 @@ import {
   SSVNetworkAbi,
   SSVNetworkAddresss,
 } from '../contracts/SSVNetworkContract'
+import { getPubkeysForProxy } from './getPubkeysForProxy'
+import { sleep } from '../../common/helpers/sleep'
 
 export async function getOperatorIdsForProxy(proxy: string) {
   logger.info('getOperatorIdsForProxy started for ' + proxy)
+
+  await sleep(1000)
 
   const logs = await publicClient.getContractEvents({
     address: SSVNetworkAddresss,

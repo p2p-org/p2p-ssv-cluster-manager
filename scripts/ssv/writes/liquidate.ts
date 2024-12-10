@@ -5,10 +5,15 @@ import { sendTx } from '../../common/helpers/sendTx'
 export async function liquidate() {
   logger.log('liquidate started')
 
-  const operatorIds = [192, 195, 200, 201]
+  const operatorIds = [
+    350,
+    354,
+    357,
+    365
+  ]
 
   const txHash = await sendTx(
-    '0x5071e29F49F9B008267D2Ed76D54B32D91695cDe',
+    '0x29CadA9320a4D068D1F4651b9AC0AA10745317ff',
     P2pSsvProxyContractAbi,
     'liquidate',
     [
@@ -16,10 +21,10 @@ export async function liquidate() {
       [
         {
           validatorCount: 0,
-          networkFeeIndex: 64749941340n,
-          index: 77106991716n,
+          networkFeeIndex: 98920382919n,
+          index: 363708005928n,
           active: true,
-          balance: 5725985024910000000n,
+          balance: 13022762241070000000n,
         },
       ],
     ],

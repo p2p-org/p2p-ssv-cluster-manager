@@ -7,11 +7,12 @@ import { reactivate } from './scripts/ssv/writes/reactivate'
 import { setFeeRecipientAddress } from './scripts/ssv/writes/setFeeRecipientAddress'
 import { removeExitedValidatorsFromClusters } from './scripts/ssv/writes/removeExitedValidatorsFromClusters'
 import { transferSsvTokensFromFactoryToClusters } from './scripts/ssv/writes/transferSsvTokensFromFactoryToClusters'
+import { liquidate } from './scripts/ssv/writes/liquidate'
 
 async function main() {
   logger.info('97-test started')
 
-  await reactivate()
+  await liquidate()
 
   logger.info('97-test finished')
 }
