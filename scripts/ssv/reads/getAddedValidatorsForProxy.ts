@@ -5,9 +5,12 @@ import {
   SSVNetworkAbi,
   SSVNetworkAddresss,
 } from '../contracts/SSVNetworkContract'
+import { sleep } from '../../common/helpers/sleep'
 
 export async function getAddedValidatorsForProxy(proxy: string) {
   logger.info('getAddedValidatorsForProxy started for ' + proxy)
+
+  await sleep(1200)
 
   const logs = await publicClient.getContractEvents({
     address: SSVNetworkAddresss,
