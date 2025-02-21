@@ -6,13 +6,13 @@ import { sendTx } from '../../common/helpers/sendTx'
 export async function setFeeRecipientAddress() {
   logger.log('setFeeRecipientAddress started')
 
-  const predictedFeeDistributorAddress = await predictFeeDistributorAddress()
+  // const predictedFeeDistributorAddress = await predictFeeDistributorAddress()
 
   const txHash = await sendTx(
-    '0x29984aadadb3927fb8c0cf5a539a282f39066332',
+    '0xB5f1c25b24bE33DC3B67274F0AD0B81c3E38606F',
     SSVNetworkAbi,
     'setFeeRecipientAddress',
-    [predictedFeeDistributorAddress],
+    ['0x253e9602FF7C5664fA955dAf3242Ce8518dAbd84'],
   )
 
   logger.log('setFeeRecipientAddress finished')

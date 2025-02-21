@@ -26,7 +26,9 @@ export async function sendTx(
   let txHash = ''
 
   try {
-    const { request } = await publicClient.simulateContract({
+    // const { request } = await publicClient.simulateContract()
+
+    txHash = await walletClient.writeContract({
       address,
       abi,
       functionName,
@@ -38,8 +40,6 @@ export async function sendTx(
       ),
       gas: 10000000n,
     })
-
-    txHash = await walletClient.writeContract(request)
 
     logger.log('Tx sent: ' + txHash)
   } catch (err) {
