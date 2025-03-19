@@ -20,6 +20,7 @@
     "03-withdraw-excess-tokens-from-clusters": "ts-node 03-withdraw-excess-tokens-from-clusters.ts",
     "04-get-liquidation-dates": "ts-node 04-get-liquidation-dates.ts",
     "97-test": "ts-node 97-test.ts",
+    "96-superform-api": "ts-node 96-superform-api.ts",
     "start": "ts-node index.ts"
   }
 }
