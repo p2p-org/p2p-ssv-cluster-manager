@@ -5,25 +5,29 @@ async function main() {
   logger.info('97-test started')
 
   const bodyObject = {
-    "user_address": "0xE1158d9158D41186994B400Ab833B85284f2E06C",
-    "from_token_address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-    "from_chain_id": 8453,
-    "amount_in": "0.1234",
+    "bridge_slippage": 5000,
+    "filter_swap_routes": false,
+    "is_erc20": false,
+    "is_part_of_multi_vault": false,
+    "need_insurance": true,
+    "positive_slippage": 5000,
     "refund_address": "0xE1158d9158D41186994B400Ab833B85284f2E06C",
-    "vault_id": "zLVQbgScIbXJuSz-NNsK-",
-    "bridge_slippage": 50,
-    "swap_slippage": 50,
+    "retain_4626": false,
     "route_type": "output",
-    "exclude_ambs": [],
-    "exclude_liquidity_providers": [],
-    "exclude_dexes": [],
-    "exclude_bridges": []
+    "superform_id": "53060340969225753329461353767745054384708953976330005872281754",
+    "superpositions_amount_in": "21881",
+    "superpositions_chain_id": 8453,
+    "swap_slippage": 5000,
+    "to_chain_id": 8453,
+    "to_token_address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "user_address": "0xE1158d9158D41186994B400Ab833B85284f2E06C",
+    "vault_id": "zLVQbgScIbXJuSz-NNsK-",
   }
 
   const body = JSON.stringify([bodyObject])
 
   try {
-    const response = await fetch("https://api.superform.xyz/deposit/calculate/", {
+    const response = await fetch("https://api.superform.xyz/withdraw/calculate/", {
       "headers": {
         "SF-API-KEY": process.env.SF_API_KEY!,
         "accept": "application/json",
@@ -42,7 +46,7 @@ async function main() {
 
     const bodyStart = JSON.stringify(data)
 
-    const responseStart = await fetch("https://api.superform.xyz/deposit/start/", {
+    const responseStart = await fetch("https://api.superform.xyz/withdraw/start/", {
       "headers": {
         "SF-API-KEY": process.env.SF_API_KEY!,
         "accept": "application/json",
