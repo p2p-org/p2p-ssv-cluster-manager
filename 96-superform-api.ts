@@ -5,14 +5,14 @@ async function main() {
   logger.info('97-test started')
 
   const bodyObject = {
-    "user_address": "0xE1158d9158D41186994B400Ab833B85284f2E06C",
-    "from_token_address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-    "from_chain_id": 8453,
+    "user_address": "0x1F22028570f6F6A5d717aD99F726050411e11eB2",
+    "from_token_address": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
+    "from_chain_id": 10,
     "amount_in": "0.1234",
-    "refund_address": "0xE1158d9158D41186994B400Ab833B85284f2E06C",
-    "vault_id": "t6Mh8XAKA-ydhXRTfQmnw",
-    "bridge_slippage": 50,
-    "swap_slippage": 50,
+    "refund_address": "0x1F22028570f6F6A5d717aD99F726050411e11eB2",
+    "vault_id": "W1wJLZDxXwbebTIhv03cE",
+    "bridge_slippage": 500,
+    "swap_slippage": 500,
     "route_type": "output",
     "exclude_ambs": [],
     "exclude_liquidity_providers": [],
