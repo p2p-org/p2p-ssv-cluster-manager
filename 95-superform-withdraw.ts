@@ -15,7 +15,7 @@ async function main() {
     "retain_4626": false,
     "route_type": "output",
     "superform_id": "53060340969225753329461353767745054384708953976330005872281754",
-    "superpositions_amount_in": "21881",
+    "superpositions_amount_in": "99982",
     "superpositions_chain_id": 8453,
     "swap_slippage": 5000,
     "to_chain_id": 8453,
