@@ -10,7 +10,7 @@ async function main() {
     "from_chain_id": 8453,
     "amount_in": "0.1234",
     "refund_address": "0xE1158d9158D41186994B400Ab833B85284f2E06C",
-    "vault_id": "zLVQbgScIbXJuSz-NNsK-",
+    "vault_id": "t6Mh8XAKA-ydhXRTfQmnw",
     "bridge_slippage": 50,
     "swap_slippage": 50,
     "route_type": "output",
