@@ -8,35 +8,40 @@ import {
 import { getPubkeysForProxy } from './getPubkeysForProxy'
 import { sleep } from '../../common/helpers/sleep'
 
-export async function getOperatorIdsForProxy(proxy: string) {
+export async function getOperatorIdsForProxy(proxy: string): Promise<bigint[][]> {
   logger.info('getOperatorIdsForProxy started for ' + proxy)
 
   await sleep(2000)
 
-  const logs = await publicClient.getContractEvents({
-    address: SSVNetworkAddresss,
-    abi: SSVNetworkAbi,
-    eventName: 'ValidatorAdded',
-    fromBlock: isHolesky ? 1502570n : 1000000n,
-    toBlock: 'latest',
-    strict: true,
-    args: {
-      owner: proxy,
-    },
-  })
+  try {
+    const logs = await publicClient.getContractEvents({
+      address: SSVNetworkAddresss,
+      abi: SSVNetworkAbi,
+      eventName: 'ValidatorAdded',
+      fromBlock: isHolesky ? 1502570n : 1000000n,
+      toBlock: 'latest',
+      strict: true,
+      args: {
+        owner: proxy,
+      },
+    })
 
-  const operatorIds = logs.map(
-    (log) =>
-      (
-        decodeEventLog({
-          abi: SSVNetworkAbi,
-          data: log.data,
-          topics: log.topics,
-        }).args as unknown as { operatorIds: bigint[] }
-      ).operatorIds,
-  )
+    const operatorIds = logs.map(
+      (log) =>
+        (
+          decodeEventLog({
+            abi: SSVNetworkAbi,
+            data: log.data,
+            topics: log.topics,
+          }).args as unknown as { operatorIds: bigint[] }
+        ).operatorIds,
+    )
 
-  logger.info('getOperatorIdsForProxy finished for ' + proxy)
+    logger.info('getOperatorIdsForProxy finished for ' + proxy)
 
-  return operatorIds
+    return operatorIds
+
+  } catch (error) {
+    return await getOperatorIdsForProxy(proxy)
+  }
 }

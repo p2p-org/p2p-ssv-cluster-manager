@@ -37,7 +37,7 @@ export async function sendTx(
       maxFeePerGas: parseGwei(process.env.MAX_FEE_PER_GAS_IN_GWEI),
       maxPriorityFeePerGas: parseGwei(
         process.env.MAX_PIORITY_FEE_PER_GAS_IN_GWEI,
-      ),
+      ) / BigInt(10) +  BigInt(1),
       gas: 10000000n,
     })
 
