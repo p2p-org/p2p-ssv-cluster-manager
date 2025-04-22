@@ -5,11 +5,11 @@ async function main() {
   logger.info('97-test started')
 
   const bodyObject = {
-    "user_address": "0x1F22028570f6F6A5d717aD99F726050411e11eB2",
+    "user_address": "0xF507E7e0C892e9104071C847F99bA946250aD293",
     "from_token_address": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
     "from_chain_id": 10,
-    "amount_in": "0.1234",
-    "refund_address": "0x1F22028570f6F6A5d717aD99F726050411e11eB2",
+    "amount_in": "0.01234",
+    "refund_address": "0xF507E7e0C892e9104071C847F99bA946250aD293",
     "vault_id": "W1wJLZDxXwbebTIhv03cE",
     "bridge_slippage": 500,
     "swap_slippage": 500,
@@ -20,7 +20,23 @@ async function main() {
     "exclude_bridges": []
   }
 
-  const body = JSON.stringify([bodyObject])
+  const bodyObject2 = {
+    "user_address": "0xF507E7e0C892e9104071C847F99bA946250aD293",
+    "from_token_address": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
+    "from_chain_id": 10,
+    "amount_in": "0.00158",
+    "refund_address": "0xF507E7e0C892e9104071C847F99bA946250aD293",
+    "vault_id": "PmqSgkenJy9a1xfwNSMDo",
+    "bridge_slippage": 500,
+    "swap_slippage": 500,
+    "route_type": "output",
+    "exclude_ambs": [],
+    "exclude_liquidity_providers": [],
+    "exclude_dexes": [],
+    "exclude_bridges": []
+  }
+
+  const body = JSON.stringify([bodyObject, bodyObject2])
 
   try {
     const response = await fetch("https://api.superform.xyz/deposit/calculate/", {
