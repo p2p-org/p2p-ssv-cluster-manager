@@ -6,11 +6,11 @@ async function main() {
 
   const bodyObject = {
     "user_address": "0xB3055eBe6b9c43C86fb684D512123Fd88f8A6f19",
-    "from_token_address": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    "from_token_address": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
     "from_chain_id": 10,
     "amount_in": "0.01234",
     "refund_address": "0xB3055eBe6b9c43C86fb684D512123Fd88f8A6f19",
-    "vault_id": "FZuZKa74BkF7AlFM7_7lo",
+    "vault_id": "PmqSgkenJy9a1xfwNSMDo",
     "bridge_slippage": 500,
     "swap_slippage": 500,
     "route_type": "output",
@@ -22,11 +22,11 @@ async function main() {
 
   const bodyObject2 = {
     "user_address": "0xB3055eBe6b9c43C86fb684D512123Fd88f8A6f19",
-    "from_token_address": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    "from_token_address": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
     "from_chain_id": 10,
     "amount_in": "0.00158",
     "refund_address": "0xB3055eBe6b9c43C86fb684D512123Fd88f8A6f19",
-    "vault_id": "OjikeuSNG6Lxbin9k4c3J",
+    "vault_id": "W1wJLZDxXwbebTIhv03cE",
     "bridge_slippage": 500,
     "swap_slippage": 500,
     "route_type": "output",
