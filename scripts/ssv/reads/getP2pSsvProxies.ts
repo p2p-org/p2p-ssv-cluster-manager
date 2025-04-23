@@ -6,9 +6,12 @@ import {
 import { isHolesky, publicClient } from '../../common/helpers/clients'
 import { decodeEventLog } from 'viem'
 import { getP2pSsvProxies_3_1 } from './getP2pSsvProxies_3_1'
+import { sleep } from '../../common/helpers/sleep'
 
 export async function getP2pSsvProxies() {
   logger.info('getP2pSsvProxies started')
+
+  await sleep(2000)
 
   const logs = await publicClient.getContractEvents({
     address: P2pSsvProxyFactoryAddresss,

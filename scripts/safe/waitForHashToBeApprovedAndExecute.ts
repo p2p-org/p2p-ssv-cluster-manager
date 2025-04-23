@@ -20,27 +20,32 @@ export async function waitForHashToBeApprovedAndExecute(
 
   const hashToApprove = await getHashToApprove(txsForMultiSend)
 
-  const unwatch = publicClient.watchContractEvent({
-    address: process.env.SAFE_ADDRESS as `0x${string}`,
-    abi: GnosisSafeAbi,
-    eventName: 'ApproveHash',
-    args: [hashToApprove, process.env.SAFE_OWNER_ADDRESS_2],
-    onError: async (error) => {
-      logger.info('Error occurred while waiting for hash to be approved')
-      logger.error(error)
-      unwatch()
-    },
-    onLogs: async () => {
-      try {
-        logger.info('Hash got approved. Executing GS tx started')
-        await execTransaction(txsForMultiSend)
-        logger.info('Executing GS tx finished')
-        unwatch()
-      } catch (error) {
-        logger.info('Error occurred while executing GS tx')
+  const promise = new Promise((resolve, reject) => {
+    const unwatch = publicClient.watchContractEvent({
+      address: process.env.SAFE_ADDRESS as `0x${string}`,
+      abi: GnosisSafeAbi,
+      eventName: 'ApproveHash',
+      args: [hashToApprove, process.env.SAFE_OWNER_ADDRESS_2],
+      onError: async (error) => {
+        logger.info('Error occurred while waiting for hash to be approved')
         logger.error(error)
-      }
-    },
+        unwatch()
+        reject()
+      },
+      onLogs: async () => {
+        try {
+          logger.info('Hash got approved. Executing GS tx started')
+          const txHash = await execTransaction(txsForMultiSend)
+          logger.info('Executing GS tx finished')
+          unwatch()
+          resolve(txHash)
+        } catch (error) {
+          logger.info('Error occurred while executing GS tx')
+          logger.error(error)
+          reject()
+        }
+      },
+    })
   })
 
   logger.info(
@@ -48,4 +53,6 @@ export async function waitForHashToBeApprovedAndExecute(
       metaTxs.length +
       ' metaTxs',
   )
+
+  return promise
 }

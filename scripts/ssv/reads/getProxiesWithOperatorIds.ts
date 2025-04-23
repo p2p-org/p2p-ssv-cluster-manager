@@ -1,11 +1,15 @@
 import { logger } from '../../common/helpers/logger'
 import { getP2pSsvProxies } from './getP2pSsvProxies'
 import { getOperatorIdsForProxy } from './getOperatorIdsForProxy'
+import { getP2pSsvProxies_3_1 } from './getP2pSsvProxies_3_1'
 
 export async function getProxiesWithOperatorIds() {
   logger.log('getProxiesWithOperatorIds started')
 
   const proxies = await getP2pSsvProxies()
+  const proxies_3_1 = await getP2pSsvProxies_3_1()
+
+  proxies_3_1.forEach(p => proxies.add(p))
 
   const proxiesWithOperatorIds: Record<string, bigint[][]> = {}
   for (const proxy of proxies) {

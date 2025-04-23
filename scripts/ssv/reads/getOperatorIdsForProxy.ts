@@ -11,7 +11,7 @@ import { sleep } from '../../common/helpers/sleep'
 export async function getOperatorIdsForProxy(proxy: string) {
   logger.info('getOperatorIdsForProxy started for ' + proxy)
 
-  await sleep(1000)
+  await sleep(2000)
 
   const logs = await publicClient.getContractEvents({
     address: SSVNetworkAddresss,
