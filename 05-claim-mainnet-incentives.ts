@@ -6,7 +6,7 @@ import { claimMainnetIncentives } from './scripts/ssv/writes/claimMainnetIncenti
 async function main() {
   logger.info('05-claim-mainnet-incentives started')
 
-  await claimMainnetIncentives()
+  await claimMainnetIncentives(true)
 
   logger.info('05-claim-mainnet-incentives finished')
 }
