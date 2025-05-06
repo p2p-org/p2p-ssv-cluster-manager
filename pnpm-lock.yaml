@@ -617,7 +617,7 @@ snapshots:
       '@types/send': 0.17.4
 
   abitype@1.0.0(typescript@5.1.6):
-    dependencies:
+    optionalDependencies:
       typescript: 5.1.6
 
   accepts@1.3.8:
@@ -1019,8 +1019,9 @@ snapshots:
       '@scure/bip39': 1.2.1
       abitype: 1.0.0(typescript@5.1.6)
       isows: 1.0.3(ws@8.13.0)
-      typescript: 5.1.6
       ws: 8.13.0
+    optionalDependencies:
+      typescript: 5.1.6
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
