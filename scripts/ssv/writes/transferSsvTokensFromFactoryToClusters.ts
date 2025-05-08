@@ -30,6 +30,8 @@ export async function transferSsvTokensFromFactoryToClusters() {
   const { clusterStatesToTopUp, totalTokensToTopUp } =
     await getClusterStatesToTopUp()
 
+  logger.info('totalTokensToTopUp', totalTokensToTopUp)
+
   if (totalTokensToTopUp === 0n) {
     logger.info('totalTokensToTopUp == 0 No need to top up.')
     logger.info('transferSsvTokensFromFactoryToClusters finished')
