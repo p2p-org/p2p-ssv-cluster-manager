@@ -4,15 +4,15 @@
   "homepage": "https://p2p.org/",
   "license": "MIT",
   "devDependencies": {
-    "@types/express": "4.17.21",
-    "@types/node": "20.11.17",
-    "axios": "1.6.7",
-    "dotenv": "16.4.5",
-    "express": "4.19.2",
+    "@types/express": "5.0.3",
+    "@types/node": "24.0.15",
+    "axios": "1.10.0",
+    "dotenv": "17.2.0",
+    "express": "5.1.0",
     "log4js": "6.9.1",
     "ts-node": "10.9.2",
-    "typescript": "5.1.6",
-    "viem": "2.7.6"
+    "typescript": "5.8.3",
+    "viem": "2.33.0"
   },
   "scripts": {
     "01-transfer-ssv-tokens-from-factory-to-clusters": "ts-node 01-transfer-ssv-tokens-from-factory-to-clusters.ts",
@@ -20,6 +20,7 @@
     "03-withdraw-excess-tokens-from-clusters": "ts-node 03-withdraw-excess-tokens-from-clusters.ts",
     "04-get-liquidation-dates": "ts-node 04-get-liquidation-dates.ts",
     "05-claim-mainnet-incentives": "ts-node 05-claim-mainnet-incentives.ts",
+    "06-set-fee-recipients": "ts-node 06-set-fee-recipients.ts",
     "97-test": "ts-node 97-test.ts",
     "96-superform-api": "ts-node 96-superform-api.ts",
     "95-superform-withdraw": "ts-node 95-superform-withdraw.ts",
