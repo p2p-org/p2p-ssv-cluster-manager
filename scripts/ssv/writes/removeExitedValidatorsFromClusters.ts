@@ -13,7 +13,7 @@ export async function removeExitedValidatorsFromClusters() {
   const proxiesToClustersWithPubkeys = await getProxiesToClustersWithPubkeys()
   const proxies = Object.keys(proxiesToClustersWithPubkeys)
 
-  proxies.reverse()
+  // proxies.reverse()
 
   for (const proxy of proxies) {
     // iterate proxies
