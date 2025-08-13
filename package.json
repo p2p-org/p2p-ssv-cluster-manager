@@ -25,5 +25,9 @@
     "96-superform-api": "ts-node 96-superform-api.ts",
     "95-superform-withdraw": "ts-node 95-superform-withdraw.ts",
     "start": "ts-node index.ts"
+  },
+  "dependencies": {
+    "axios-retry": "^4.5.0",
+    "https": "^1.0.0"
   }
 }
