@@ -88,13 +88,16 @@ async function main() {
         clusterState = toClusterState(clusterStateFromApi)
       }
 
-      _operatorOwners.push(owner)
       _operatorIds = operators
       _publicKeys.push(share.data.publicKey)
       _sharesData.push(share.payload.sharesData)
     }
 
-    const ssvTokensValueInWei = _amount / 1000000n
+    for (let i = 0; i < 4; i++) {
+      _operatorOwners.push(shares[0].data.ownerAddress)
+    }
+
+    const ssvTokensValueInWei = _amount * 1000000000000n / 1000000000000000000n
 
     await bulkRegisterValidators(
       _operatorOwners, _operatorIds!, _publicKeys,

@@ -40,6 +40,9 @@ export async function bulkRegisterValidators(
   }
   metaTxs.push(registerValidatorsMetaTx)
 
+  logger.info('_amount', _amount)
+  logger.info('ssvTokensValueInWei', ssvTokensValueInWei)
+
   const setFeeRecipientAddressCalldata = encodeFunctionData({
     abi: SSVNetworkAbi,
     functionName: 'setFeeRecipientAddress',
