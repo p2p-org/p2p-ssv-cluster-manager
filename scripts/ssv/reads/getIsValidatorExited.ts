@@ -21,7 +21,7 @@ export async function getIsValidatorExited(pubkey: string): Promise<boolean> {
       return false
     }
 
-    const isExited = result.data.data.status === 'withdrawal_done'
+    const isExited = result.data.data.status === 'withdrawal_done' || result.data.data.status === 'withdrawal_possible' || result.data.data.status === 'exited_unslashed'
     logger.info('getIsValidatorExited finished for ' + pubkey + ' ' + isExited)
     return isExited
   } catch (error) {
