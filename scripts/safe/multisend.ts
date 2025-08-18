@@ -8,7 +8,7 @@ const encodeMetaTransaction = (tx: MetaTransaction): string => {
     [
       0, // always CALL
       tx.to,
-      0n, // never send ETH
+      tx.value || 0n,
       BigInt(data.length),
       tx.data,
     ],

@@ -3,9 +3,10 @@ import { encodeMultiSend } from './multisend'
 import { getHashToApprove } from './getHashToApprove'
 import { publicClient } from '../common/helpers/clients'
 import process from 'process'
-import { GnosisSafeAbi } from './contracts/GnosisSafe'
+import { GnosisSafeAbi, GnosisSafeContract } from './contracts/GnosisSafe'
 import { execTransaction } from './execTransaction'
 import { MetaTransaction } from './models/MetaTransaction'
+import { execTransactionWithThreshold1 } from './execTransactionWithThreshold1'
 
 export async function waitForHashToBeApprovedAndExecute(
   metaTxs: MetaTransaction[],
@@ -15,6 +16,14 @@ export async function waitForHashToBeApprovedAndExecute(
       metaTxs.length +
       ' metaTxs',
   )
+
+  const threshold = await GnosisSafeContract.read.getThreshold()
+  if (threshold == 1) {
+    logger.info('threshold == 1')
+    const txHash = await execTransactionWithThreshold1(metaTxs)
+    logger.info('Executing GS tx finished')
+    return txHash
+  }
 
   const txsForMultiSend = encodeMultiSend(metaTxs)
 
