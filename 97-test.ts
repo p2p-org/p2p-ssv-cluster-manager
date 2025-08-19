@@ -29,6 +29,7 @@ import { getCurrentClusterBalance } from './scripts/ssv/reads/getCurrentClusterB
 import { blocksPerDay } from './scripts/common/helpers/constants'
 import { setSsvOperatorIds } from './scripts/ssv/writes/setOperatorIds'
 import { setAllowedSsvOperatorOwners } from './scripts/ssv/writes/setAllowedSsvOperatorOwners'
+import { predictP2pSsvProxyAddress_3_1 } from './scripts/ssv/reads/predictP2pSsvProxyAddress_3_1'
 
 async function main() {
   logger.info('97-test started')
@@ -46,7 +47,7 @@ async function main() {
     let _operatorIds: number[]
     const _publicKeys: string[] = []
     const _sharesData: string[] = []
-    const _clientConfig: FeeRecipient = { recipient: '0xF37FeF00Fe67956E9870114815c42F0Cc18373ce', basisPoints: 0 }
+    const _clientConfig: FeeRecipient = { recipient: '0xF37FeF00Fe67956E9870114815c42F0Cc18373ce', basisPoints: 9300 }
     const _referrerConfig: FeeRecipient = { recipient: zeroAddress, basisPoints: 0 }
 
 
@@ -77,33 +78,30 @@ async function main() {
       collateral
 
     for (const share of shares) {
-      const owner: string = share.data.ownerAddress
-      const operators: number[] = share.payload.operatorIds
-      const clusterStateFromApi = await getClusterStateFromApi(owner, operators)
-      if (clusterStateFromApi === null) {
-        clusterState = {
-          validatorCount: 0,
-          networkFeeIndex: 0n,
-          index: 0n,
-          active: false,
-          balance: 0n
-        }
-      } else {
-        clusterState = toClusterState(clusterStateFromApi)
-      }
-
-      _operatorIds = operators
+      _operatorIds = share.payload.operatorIds
       _publicKeys.push(share.data.publicKey)
       _sharesData.push(share.payload.sharesData)
     }
 
-    // for (let i = 0; i < 4; i++) {
-    //   _operatorOwners.push(shares[0].data.ownerAddress)
-    // }
     _operatorOwners.push('0x95b3D923060b7E6444d7C3F0FCb01e6F37F4c418')
     _operatorOwners.push('0x47659cc5fB8CDC58bD68fEB8C78A8e19549d39C5')
     _operatorOwners.push('0x9a792B1588882780Bed412796337E0909e51fAB7')
     _operatorOwners.push('0xfeC26f2bC35420b4fcA1203EcDf689a6e2310363')
+
+    const proxy: string = await predictP2pSsvProxyAddress_3_1(_clientConfig, _referrerConfig) as string
+
+    const clusterStateFromApi = await getClusterStateFromApi(proxy, _operatorIds!)
+    if (clusterStateFromApi === null) {
+      clusterState = {
+        validatorCount: 0,
+        networkFeeIndex: 0n,
+        index: 0n,
+        active: false,
+        balance: 0n
+      }
+    } else {
+      clusterState = toClusterState(clusterStateFromApi)
+    }
 
     const ssvTokensValueInWei = _amount * 1000000000000n / 1000000000000000000n
 
