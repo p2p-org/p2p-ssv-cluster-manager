@@ -47,7 +47,7 @@ async function main() {
     let _operatorIds: number[]
     const _publicKeys: string[] = []
     const _sharesData: string[] = []
-    const _clientConfig: FeeRecipient = { recipient: '0xF37FeF00Fe67956E9870114815c42F0Cc18373ce', basisPoints: 9300 }
+    const _clientConfig: FeeRecipient = { recipient: '0xFe911e8BCF1E0BF7F8967b8E38B64036924d8Ef2', basisPoints: 0 }
     const _referrerConfig: FeeRecipient = { recipient: zeroAddress, basisPoints: 0 }
 
 
@@ -96,7 +96,7 @@ async function main() {
         validatorCount: 0,
         networkFeeIndex: 0n,
         index: 0n,
-        active: false,
+        active: true,
         balance: 0n
       }
     } else {

