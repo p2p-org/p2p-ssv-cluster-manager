@@ -11,13 +11,108 @@ import { liquidate } from './scripts/ssv/writes/liquidate'
 import { bulkExitValidator } from './scripts/ssv/writes/bulkExitValidator'
 import * as fs from 'fs';
 import { sleep } from './scripts/common/helpers/sleep'
+import { readFileSync } from 'fs'
+import { setSmallExchangeRate } from './scripts/ssv/writes/setSmallExchangeRate'
+import { transferOwnership } from './scripts/ssv/writes/transferOwnership'
+import { FeeRecipient, SharesFile } from './scripts/ssv/models/SharesFileTypes'
+import { getClusterStateFromApi } from './scripts/ssv/reads/getClusterStateFromApi'
+import { toClusterState } from './scripts/ssv/models/ClusterStateApi'
+import { zeroAddress } from 'viem'
+import { bulkRegisterValidators } from './scripts/ssv/writes/bulkRegisterValidators'
+import { ClusterState } from './scripts/ssv/models/ClusterState'
+import { getNetworkFee } from './scripts/ssv/reads/getNetworkFee'
+import { getMinimumLiquidationCollateral } from './scripts/ssv/reads/getMinimumLiquidationCollateral'
+import { getLiquidationThresholdPeriod } from './scripts/ssv/reads/getLiquidationThresholdPeriod'
+import process from 'process'
+import { getOperatorFee } from './scripts/ssv/reads/getOperatorFee'
+import { getCurrentClusterBalance } from './scripts/ssv/reads/getCurrentClusterBalance'
+import { blocksPerDay } from './scripts/common/helpers/constants'
 
 async function main() {
   logger.info('97-test started')
 
-  await getIsValidatorExited('0xa1bc80818cfe6b7b402127e320bd74bf3e63bcb372fe0dba34485e636acf07d2aa4375bd370dd7defe1f04d72b922672')
+  try {
+
+    const fileContent = readFileSync('keyshares.json', 'utf-8');
+    const sharesFile: SharesFile = JSON.parse(fileContent);
+    const shares = sharesFile.shares
+
+    let clusterState: ClusterState
+    const _operatorOwners: string[] = []
+    let _operatorIds: number[]
+    const _publicKeys: string[] = []
+    const _sharesData: string[] = []
+    const _clientConfig: FeeRecipient = { recipient: '0xF37FeF00Fe67956E9870114815c42F0Cc18373ce', basisPoints: 0 }
+    const _referrerConfig: FeeRecipient = { recipient: zeroAddress, basisPoints: 0 }
+
+
+    if (!process.env.ALLOWED_DAYS_TO_LIQUIDATION) {
+      throw new Error('No ALLOWED_DAYS_TO_LIQUIDATION in ENV')
+    }
+    const allowedDaysToLiquidation = BigInt(
+      process.env.ALLOWED_DAYS_TO_LIQUIDATION,
+    )
+    const validatorCount = shares.length
+
+    let totalFeePerBlock = 0n
+    const networkFee = await getNetworkFee()
+    totalFeePerBlock += networkFee
+
+    const minimumLiquidationCollateral = await getMinimumLiquidationCollateral()
+    const liquidationThresholdPeriod = await getLiquidationThresholdPeriod()
+    const collateralForLiquidationThresholdPeriod = liquidationThresholdPeriod *
+      totalFeePerBlock *
+      BigInt(validatorCount)
+    const collateral = minimumLiquidationCollateral > collateralForLiquidationThresholdPeriod
+      ? minimumLiquidationCollateral
+      : collateralForLiquidationThresholdPeriod
+    const neededBalancePerValidator =
+      totalFeePerBlock * blocksPerDay * allowedDaysToLiquidation
+    const _amount =
+      neededBalancePerValidator * BigInt(validatorCount) +
+      collateral
+
+    for (const share of shares) {
+      const owner: string = share.data.ownerAddress
+      const operators: number[] = share.payload.operatorIds
+      const clusterStateFromApi = await getClusterStateFromApi(owner, operators)
+      if (clusterStateFromApi === null) {
+        clusterState = {
+          validatorCount: 0,
+          networkFeeIndex: 0n,
+          index: 0n,
+          active: false,
+          balance: 0n
+        }
+      } else {
+        clusterState = toClusterState(clusterStateFromApi)
+      }
+
+      _operatorIds = operators
+      _publicKeys.push(share.data.publicKey)
+      _sharesData.push(share.payload.sharesData)
+    }
+
+    for (let i = 0; i < 4; i++) {
+      _operatorOwners.push(shares[0].data.ownerAddress)
+    }
+
+    const ssvTokensValueInWei = _amount * 1000000000000n / 1000000000000000000n
+
+    await bulkRegisterValidators(
+      _operatorOwners, _operatorIds!, _publicKeys,
+      _sharesData, _amount, clusterState!,
+      _clientConfig, _referrerConfig, ssvTokensValueInWei
+    )
+  } catch (error) {
+    logger.error(error)
+  }
 
   logger.info('97-test finished')
+}
+
+function setZeroSsvPerEthExchangeRateDividedByWei() {
+
 }
 
 async function test_exitValidator() {
@@ -51,3 +146,4 @@ main().catch((error) => {
   console.error(error)
   process.exitCode = 1
 })
+

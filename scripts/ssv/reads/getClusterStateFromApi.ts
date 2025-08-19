@@ -5,7 +5,7 @@ import { isHolesky } from '../../common/helpers/clients'
 
 export async function getClusterStateFromApi(
   owner: string,
-  operators: bigint[],
+  operators: bigint[] | number[],
 ): Promise<ClusterStateApi> {
   const args = `owner/${owner}/operators/${operators.join(',')}`
   logger.info('getClusterStateFromApi started for ' + args)
@@ -15,7 +15,7 @@ export async function getClusterStateFromApi(
   }
 
   const result = await axios.get(
-    `https://api.ssv.network/api/v4/${isHolesky ? 'holesky' : 'mainnet'}/clusters/` +
+    `https://api.ssv.network/api/v4/${isHolesky ? 'hoodi' : 'mainnet'}/clusters/` +
     args,
   )
 
