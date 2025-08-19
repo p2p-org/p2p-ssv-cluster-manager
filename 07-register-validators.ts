@@ -47,7 +47,7 @@ async function main() {
     let _operatorIds: number[]
     const _publicKeys: string[] = []
     const _sharesData: string[] = []
-    const _clientConfig: FeeRecipient = { recipient: '0xFe911e8BCF1E0BF7F8967b8E38B64036924d8Ef2', basisPoints: 0 }
+    const _clientConfig: FeeRecipient = { recipient: '0x427deF1c9d4a067cf7A2e0a1bd3b6280a6bC2bE5', basisPoints: 0 }
     const _referrerConfig: FeeRecipient = { recipient: zeroAddress, basisPoints: 0 }
 
 
