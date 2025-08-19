@@ -869,12 +869,6 @@ export const P2pSsvProxyFactoryAbi_3_1 = [{
   'stateMutability': 'nonpayable',
   'type': 'function'
 }, {
-  'inputs': [{ 'internalType': 'uint64[24]', 'name': '_operatorIds', 'type': 'uint64[24]' }],
-  'name': 'setSsvOperatorIds',
-  'outputs': [],
-  'stateMutability': 'nonpayable',
-  'type': 'function'
-}, {
   'inputs': [{
     'internalType': 'uint64[24]',
     'name': '_operatorIds',

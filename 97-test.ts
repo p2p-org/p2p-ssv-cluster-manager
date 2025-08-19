@@ -27,11 +27,15 @@ import process from 'process'
 import { getOperatorFee } from './scripts/ssv/reads/getOperatorFee'
 import { getCurrentClusterBalance } from './scripts/ssv/reads/getCurrentClusterBalance'
 import { blocksPerDay } from './scripts/common/helpers/constants'
+import { setSsvOperatorIds } from './scripts/ssv/writes/setOperatorIds'
+import { setAllowedSsvOperatorOwners } from './scripts/ssv/writes/setAllowedSsvOperatorOwners'
 
 async function main() {
   logger.info('97-test started')
 
   try {
+    // await setAllowedSsvOperatorOwners()
+    // await setSsvOperatorIds()
 
     const fileContent = readFileSync('keyshares.json', 'utf-8');
     const sharesFile: SharesFile = JSON.parse(fileContent);
@@ -93,9 +97,13 @@ async function main() {
       _sharesData.push(share.payload.sharesData)
     }
 
-    for (let i = 0; i < 4; i++) {
-      _operatorOwners.push(shares[0].data.ownerAddress)
-    }
+    // for (let i = 0; i < 4; i++) {
+    //   _operatorOwners.push(shares[0].data.ownerAddress)
+    // }
+    _operatorOwners.push('0x95b3D923060b7E6444d7C3F0FCb01e6F37F4c418')
+    _operatorOwners.push('0x47659cc5fB8CDC58bD68fEB8C78A8e19549d39C5')
+    _operatorOwners.push('0x9a792B1588882780Bed412796337E0909e51fAB7')
+    _operatorOwners.push('0xfeC26f2bC35420b4fcA1203EcDf689a6e2310363')
 
     const ssvTokensValueInWei = _amount * 1000000000000n / 1000000000000000000n
 
