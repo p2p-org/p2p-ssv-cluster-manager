@@ -1,4 +1,4 @@
-import { holesky, mainnet } from 'viem/chains'
+import { holesky, hoodi, mainnet } from 'viem/chains'
 import { createPublicClient, createWalletClient, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import process from 'process'
@@ -7,10 +7,10 @@ if (!process.env.RPC_URL) {
   throw new Error('No RPC_URL in ENV')
 }
 
-export const isHolesky = process.env.RPC_URL.includes('holesky')
+export const isHolesky = process.env.RPC_URL.includes('hoodi')
 
 const chain = isHolesky
-  ? holesky
+  ? hoodi
   : process.env.RPC_URL.includes('mainnet')
     ? mainnet
     : null
