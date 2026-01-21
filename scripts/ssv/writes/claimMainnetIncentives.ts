@@ -37,6 +37,16 @@ export async function claimMainnetIncentives(shouldForwardToClients: boolean) {
       //   continue
       // }
 
+      // if (proxy.toLowerCase() === '0x008522637b4f6c5a6a6992ec7d47205e3e1ea7d4'.toLowerCase()) {
+      //   logger.info('skipping', '0x008522637b4f6c5a6a6992ec7d47205e3e1ea7d4')
+      //   continue
+      // }
+      //
+      // if (proxy.toLowerCase() === '0x47da475e34413c47901576cf6e41bb7ba290567d'.toLowerCase()) {
+      //   logger.info('skipping', '0x47da475e34413c47901576cf6e41bb7ba290567d')
+      //   continue
+      // }
+
       const { cumulativeAmount, expectedMerkleRoot, merkleProof } = getMerkleInfo(proxy)
 
       const claimCalldata = encodeFunctionData({
@@ -49,14 +59,20 @@ export async function claimMainnetIncentives(shouldForwardToClients: boolean) {
       //   functionName: 'callAnyContract',
       //   args: ['0xe16d6138B1D2aD4fD6603ACdb329ad1A6cD26D9f', claimCalldata],
       // })
+
+      const preclaimed = (await CumulativeMerkleDropContract.read.cumulativeClaimed([proxy])) as bigint
+      const amountToTransfer = BigInt(cumulativeAmount) - preclaimed
+
+      if (amountToTransfer <= 0) {
+        logger.info(proxy, 'already claimed')
+        continue
+      }
+
       const metaTx = {
         to: CumulativeMerkleDropAddresss,
         data: claimCalldata,
       }
       metaTxs.push(metaTx)
-
-      const preclaimed = (await CumulativeMerkleDropContract.read.cumulativeClaimed([proxy])) as bigint
-      const amountToTransfer = BigInt(cumulativeAmount) - preclaimed
 
       if (!nonForwardToClientsProxies.map(a => a.toLowerCase()).includes(proxy.toLowerCase())) {
         const client = await getProxyClient(proxy)
