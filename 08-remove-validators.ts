@@ -30,76 +30,39 @@ import { blocksPerDay } from './scripts/common/helpers/constants'
 import { setSsvOperatorIds } from './scripts/ssv/writes/setOperatorIds'
 import { setAllowedSsvOperatorOwners } from './scripts/ssv/writes/setAllowedSsvOperatorOwners'
 import { predictP2pSsvProxyAddress_3_1 } from './scripts/ssv/reads/predictP2pSsvProxyAddress_3_1'
-import { sendTx } from './scripts/common/helpers/sendTx'
-import { SSVNetworkAbi } from './scripts/ssv/contracts/SSVNetworkContract'
-import {
-  FeeDistributorFactoryAbi,
-  FeeDistributorFactoryContract
-} from './scripts/ssv/contracts/FeeDistributorFactoryContract'
-import { SSVNetworkViewsContract } from './scripts/ssv/contracts/SSVNetworkViewsContract'
+import { bulkRemoveValidator } from './scripts/ssv/writes/bulkRemoveValidator'
 
 async function main() {
   logger.info('97-test started')
 
   try {
-    // await setAllowedSsvOperatorOwners()
-    // await setSsvOperatorIds()
-
     const fileContent = readFileSync('keyshares.json', 'utf-8');
     const sharesFile: SharesFile = JSON.parse(fileContent);
     const shares = sharesFile.shares
 
     let clusterState: ClusterState
-    const _operatorOwners: string[] = []
     let _operatorIds: number[]
     const _publicKeys: string[] = []
     const _sharesData: string[] = []
-
     const _clientConfig: FeeRecipient = {
-      basisPoints: 10000,
-      recipient: '0x4205f876f0f6783a011bd11076583fe57c88af33'
+      basisPoints: 0,
+      recipient: '0x5cb5ada4388454320325347be70f07602cc3b2d5'
     }
     const _referrerConfig: FeeRecipient = {
-      basisPoints: 0,
-      recipient: zeroAddress,
+      basisPoints: 10000,
+      recipient: '0xD6E4aA932147A3FE5311dA1b67D9e73da06F9cEf',
     }
+
 
     if (!process.env.ALLOWED_DAYS_TO_LIQUIDATION) {
       throw new Error('No ALLOWED_DAYS_TO_LIQUIDATION in ENV')
     }
-    const allowedDaysToLiquidation = BigInt(
-      process.env.ALLOWED_DAYS_TO_LIQUIDATION,
-    )
-    const validatorCount = shares.length
-
-    let totalFeePerBlock = 0n
-    const networkFee = await getNetworkFee()
-    totalFeePerBlock += networkFee
-
-    const minimumLiquidationCollateral = await getMinimumLiquidationCollateral()
-    const liquidationThresholdPeriod = await getLiquidationThresholdPeriod()
-    const collateralForLiquidationThresholdPeriod = liquidationThresholdPeriod *
-      totalFeePerBlock *
-      BigInt(validatorCount)
-    const collateral = minimumLiquidationCollateral > collateralForLiquidationThresholdPeriod
-      ? minimumLiquidationCollateral
-      : collateralForLiquidationThresholdPeriod
-    const neededBalancePerValidator =
-      totalFeePerBlock * blocksPerDay * allowedDaysToLiquidation
-    const _amount =
-      neededBalancePerValidator * BigInt(validatorCount) +
-      collateral // + 2000000000000000000n
 
     for (const share of shares) {
       _operatorIds = share.payload.operatorIds
       _publicKeys.push(share.data.publicKey)
       _sharesData.push(share.payload.sharesData)
     }
-
-    _operatorOwners.push('0xfeC26f2bC35420b4fcA1203EcDf689a6e2310363')
-    _operatorOwners.push('0x95b3D923060b7E6444d7C3F0FCb01e6F37F4c418')
-    _operatorOwners.push('0x47659cc5fB8CDC58bD68fEB8C78A8e19549d39C5')
-    _operatorOwners.push('0x9a792B1588882780Bed412796337E0909e51fAB7')
 
     const proxy: string = await predictP2pSsvProxyAddress_3_1(_clientConfig, _referrerConfig) as string
 
@@ -116,13 +79,7 @@ async function main() {
       clusterState = toClusterState(clusterStateFromApi)
     }
 
-    const ssvTokensValueInWei = _amount * 1000000000000n / 1000000000000000000n
-
-    await bulkRegisterValidators(
-      _operatorOwners, _operatorIds!, _publicKeys,
-      _sharesData, _amount, clusterState!,
-      _clientConfig, _referrerConfig, ssvTokensValueInWei
-    )
+    await bulkRemoveValidator(proxy, _publicKeys, _operatorIds!, clusterState)
 
   } catch (error) {
     logger.error(error)
