@@ -16,7 +16,9 @@ import { SSVNetworkViewsContract } from '../contracts/SSVNetworkViewsContract'
 
 const nonForwardToClientsProxies = [
   '0xc0Ec400995e2BC1e12837804d512302f7feEF769',
-  '0x745Ced32ee83e1CC186dF0C32FeD1B54F3F15057'
+  '0x2f92E22977FBb829a94FE5de5C408ad319c933c5',
+  '0x745Ced32ee83e1CC186dF0C32FeD1B54F3F15057',
+  '0xCDA67BC4B26160294EC08B93f5568cabda9f7907'
 ]
 
 export async function claimMainnetIncentives(shouldForwardToClients: boolean) {
