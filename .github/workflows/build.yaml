@@ -19,11 +19,11 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 #
       - name: Build Image
         id: build-image
-        uses: redhat-actions/buildah-build@v2
+        uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2
         with:
           image: iaas-383414/p2p-ssv-cluster-manager/main
           context: .
@@ -31,14 +31,14 @@ jobs:
           containerfiles: |
             ./Dockerfile
 
-      - uses: 'google-github-actions/auth@v2'
+      - uses: 'google-github-actions/auth@c200f3691d83b41bf9bbd8638997a462592937ed' # v2
         id: auth
         with:
           project_id: iaas-383414
           workload_identity_provider: projects/802839937832/locations/global/workloadIdentityPools/iaas-pipelines-iaas/providers/github-all-p2p-org-repos
 
       - name: Push to Artifact Registry
-        uses: redhat-actions/push-to-registry@v2
+        uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
         with:
           image: ${{ steps.build-image.outputs.image }}
           tags: ${{ steps.build-image.outputs.tags }}
@@ -56,7 +56,7 @@ jobs:
     needs: docker-build
     steps:
       # change p2p-ssv-cluster-manager images tag reference in k8s-specs repository
-      - uses: actions/checkout@master
+      - uses: actions/checkout@61b9e3751b92087fd0b06925ba6dd6314e06f089 # master
         with:
           repository: p2p-org/p2pwebsite-k8s-specs
           ssh-key: ${{ secrets.K8S_SPECS_KEY }}
