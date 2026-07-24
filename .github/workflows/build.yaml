@@ -38,7 +38,7 @@ jobs:
           workload_identity_provider: projects/802839937832/locations/global/workloadIdentityPools/iaas-pipelines-iaas/providers/github-all-p2p-org-repos
 
       - name: Push to Artifact Registry
-        uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
+        uses: redhat-actions/push-to-registry@94ade333c38ecc0e60e94785125d9a52ca423b37 # v3
         with:
           image: ${{ steps.build-image.outputs.image }}
           tags: ${{ steps.build-image.outputs.tags }}
