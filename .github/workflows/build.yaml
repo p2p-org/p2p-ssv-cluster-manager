@@ -8,6 +8,9 @@ on:
 env:
   REGISTRY: europe-west4-docker.pkg.dev
 
+permissions:
+  contents: write # git push
+
 jobs:
   docker-build:
     runs-on: ubuntu-latest
